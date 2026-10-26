@@ -341,9 +341,25 @@
             <div class="qr-steps">
               <div><b>Bước 1:</b> GV bấm <i>“Phóng to QR chiếu lớp”</i> trên màn hình.</div>
               <div><b>Bước 2:</b> HS quét QR, điền câu trả lời &amp; vẽ ảnh trên điện thoại.</div>
-              <div><b>Bước 3:</b> HS bấm <i>“Nộp bài cho GV”</i> để xuất ảnh phiếu PNG / mã QR kết quả gửi GV.</div>
+              <div><b>Bước 3:</b> HS bấm <i>“Nộp bài cho GV”</i> → bài làm tự động gửi trực tiếp về danh sách bên dưới.</div>
             </div>
           </div>
+        </div>
+
+        <!-- BẢNG NHẬN BÀI TRỰC TUYẾN CỦA GIÁO VIÊN (REAL-TIME) -->
+        <div class="card reveal no-print live-inbox-card" id="live-inbox-card">
+          <div class="live-inbox-head">
+            <div>
+              <span class="live-dot-badge"><span class="live-dot"></span> Đang nhận bài trực tuyến</span>
+              <h3 style="margin:4px 0 2px">📥 Bài nộp của Học sinh (<span id="live-inbox-count">0</span> bài)</h3>
+              <p class="muted" style="margin:0;font-size:.88rem">Khi học sinh nộp bài ở trang <code>phieu-hoc-tap.html</code> trên điện thoại, bài làm sẽ tự động hiện ngay tại đây kèm điểm chấm và hình vẽ.</p>
+            </div>
+            <div class="row-actions">
+              <button class="btn btn-primary btn-small" id="btn-live-refresh" type="button">↻ Làm mới</button>
+              <button class="btn btn-ghost btn-small" id="btn-inbox-open-2" type="button">📂 Mở rộng / Nhập mã</button>
+            </div>
+          </div>
+          <div class="inbox-list" id="live-inbox-list"></div>
         </div>
 
         <div class="worksheet card" id="worksheet">
@@ -582,13 +598,31 @@
       <button class="modal-close" data-close="inbox-modal" aria-label="Đóng">✕</button>
       <span class="badge">Dành cho Giáo viên</span>
       <h3>📂 Hộp bài nộp &amp; Giải mã kết quả Học sinh</h3>
-      <p class="muted">Danh sách các phiếu đã nộp trên thiết bị này hoặc dán <b>Mã bài nộp</b> của học sinh để xem chi tiết kết quả.</p>
+      <p class="muted">Danh sách các phiếu học sinh đã nộp trực tuyến (tự động đồng bộ từ trang <code>phieu-hoc-tap.html</code>) hoặc dán <b>Mã bài nộp</b> dự phòng.</p>
       <div class="qr-input-group" style="margin: 10px 0 14px">
-        <input type="text" id="inbox-import-input" placeholder="Dán Mã bài nộp hoặc link kết quả của học sinh vào đây..." />
+        <input type="text" id="inbox-import-input" placeholder="Dán Mã bài nộp dự phòng của học sinh vào đây..." />
         <button class="btn btn-primary btn-small" id="btn-inbox-import">➕ Nhập bài</button>
-        <button class="btn btn-ghost btn-small" id="btn-inbox-clear">🗑 Xoá danh sách</button>
+        <button class="btn btn-ghost btn-small" id="btn-inbox-clear">🗑 Xoá bộ nhớ</button>
       </div>
       <div class="inbox-list" id="inbox-list"></div>
+    </div>
+  </div>
+
+  <!-- MODAL XEM CHI TIẾT PHIẾU & HÌNH VẼ CỦA HỌC SINH (DÀNH CHO GIÁO VIÊN) -->
+  <div class="modal-backdrop hidden no-print" id="student-detail-modal" role="dialog" aria-modal="true">
+    <div class="modal-card" style="width:min(940px,100%)">
+      <button class="modal-close" data-close="student-detail-modal" aria-label="Đóng">✕</button>
+      <div class="submit-head">
+        <span class="badge">Chi tiết bài nộp Học sinh · Chấm tự động</span>
+        <h3 id="stu-detail-title">Phiếu học tập của Học sinh</h3>
+      </div>
+      <div class="submit-img-wrap" style="max-height:68vh">
+        <img id="stu-detail-img" alt="Phiếu bài làm chi tiết của học sinh" />
+      </div>
+      <div class="row-actions" style="justify-content:center; margin-top:14px">
+        <button class="btn btn-accent btn-small" id="btn-stu-detail-dl">⬇ Tải ảnh Phiếu đã chấm (PNG)</button>
+        <button class="btn btn-ghost btn-small" data-close="student-detail-modal">Đóng</button>
+      </div>
     </div>
   </div>
 

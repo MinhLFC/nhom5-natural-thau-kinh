@@ -483,6 +483,29 @@ select.bad { border-color: var(--bad); background: color-mix(in srgb, var(--bad)
   background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px;
   padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
 }
+.live-inbox-card { max-width: 1050px; margin: 0 auto 26px; border-left: 5px solid var(--ok); }
+.live-inbox-head {
+  display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.live-dot-badge {
+  display: inline-flex; align-items: center; gap: 7px; font-size: .78rem; font-weight: 800;
+  color: var(--ok); background: rgba(22, 163, 74, .12); padding: 3px 11px; border-radius: 999px;
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--ok);
+  box-shadow: 0 0 0 0 rgba(22, 163, 74, .7); animation: pulseDot 1.6s infinite;
+}
+@keyframes pulseDot {
+  70% { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+}
+.sub-status-card {
+  width: 100%; display: flex; align-items: center; gap: 10px; text-align: left;
+  padding: 10px 14px; border-radius: 12px; background: rgba(22, 163, 74, .12);
+  border: 1px solid rgba(22, 163, 74, .35); color: var(--text); font-size: .85rem; font-weight: 700;
+}
+.sub-status-icon { font-size: 1.3rem; flex: none; }
 
 .site-footer { padding: 26px 0; text-align: center; color: var(--muted); font-size: .88rem; border-top: 1px solid var(--border); }
 

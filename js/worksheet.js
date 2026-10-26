@@ -1,7 +1,15 @@
 /* =========================================================
-   Phiếu học tập điện tử + Trạm Mã QR + Xuất ảnh phiếu & Nộp bài
+   Phiếu học tập điện tử + Trạm Mã QR + Đồng bộ nộp bài trực tuyến Thời gian thực
    ========================================================= */
 (function () {
+  const IS_STUDENT_PAGE =
+    document.body.dataset.role === 'student' ||
+    document.body.classList.contains('standalone-ws-body');
+
+  // Kênh đồng bộ thời gian thực giữa trang Học sinh (phieu-hoc-tap.html) và trang Giáo viên (index.html)
+  const CLOUD_TOPIC = 'natural_hcmue_khtn9_bai8_v1';
+  const CLOUD_BASE = `https://ntfy.sh/${CLOUD_TOPIC}`;
+
   // ---------- Phần 1 & nhận xét ảnh: các lựa chọn ----------
   const RAY_OPTS = [
     ['', '— Chọn đường truyền tia ló —'],
@@ -21,6 +29,14 @@
     if (k) OPT_TEXT[k] = v;
   });
 
+  const ANS_KEYS = [
+    'thang', 'thang',
+    'quaF2', 'keoF',
+    'songsong', 'songsong',
+    'that', 'nguoc', 'lon',
+    'ao', 'cung', 'nho',
+  ];
+
   const fill = (sel, opts) => {
     sel.innerHTML = opts.map(([v, t]) => `<option value="${v}">${t}</option>`).join('');
   };
@@ -36,6 +52,51 @@
   // ---------- Bảng vẽ ----------
   const F = 10;
   const SETUP = { ht: { d: 18, h: 5 }, pk: { d: 15, h: 6 } };
+
+  function drawPadContent(v, type, strokes, showAns = false) {
+    const c = v.ctx, p = PAPER_PALETTE;
+    const cfg = SETUP[type];
+    Draw.background(v, p, 2);
+    Draw.axis(v, p, false);
+    Draw.lens(v, p, type, v.ymax * 0.85, { shape: false });
+    Draw.foci(v, p, F);
+    Draw.arrowObj(v, p, -cfg.d, cfg.h, p.obj, { base: 'A', tip: 'B' });
+
+    if (showAns) {
+      const f = type === 'ht' ? F : -F;
+      const { d, h } = cfg;
+      const dp = (d * f) / (d - f), hp = (-h * dp) / d;
+      const virtual = dp < 0;
+      const xr = v.xmax + 2;
+      c.save();
+      c.globalAlpha = 0.85;
+      const rays = [
+        [0, PAPER_PALETTE.rayP],
+        [h / -d, PAPER_PALETTE.rayO],
+      ];
+      rays.forEach(([m, col]) => {
+        const r = traceRay(-d, h, m, f, xr);
+        if (virtual) r.segs.push({ x1: 0, y1: r.yh, x2: dp, y2: r.yh + r.m2 * dp, dashed: true });
+        if (type === 'pk' && m === 0) r.segs.push({ x1: 0, y1: r.yh, x2: f, y2: 0, dashed: true });
+        Draw.rayPath(v, p, r.segs, col);
+      });
+      Draw.arrowObj(v, p, dp, hp, PAPER_PALETTE.img, { base: "A'", tip: "B'", dashed: virtual });
+      c.restore();
+    }
+
+    (strokes || []).forEach((s) => {
+      c.save();
+      c.strokeStyle = s.color || '#d32f2f';
+      c.lineWidth = s.tool === 'pen' ? 2.2 : 2;
+      c.lineCap = 'round';
+      c.lineJoin = 'round';
+      if (s.tool === 'dash') c.setLineDash([7, 6]);
+      c.beginPath();
+      (s.pts || []).forEach(([x, y], i) => (i ? c.lineTo(v.X(x), v.Y(y)) : c.moveTo(v.X(x), v.Y(y))));
+      c.stroke();
+      c.restore();
+    });
+  }
 
   class SketchPad {
     constructor(root) {
@@ -71,23 +132,31 @@
           Sound.play('click');
         })
       );
-      r.querySelector('[data-act="undo"]').addEventListener('click', () => {
-        this.strokes.pop();
-        Sound.play('click');
-        this.draw();
-      });
-      r.querySelector('[data-act="clear"]').addEventListener('click', () => {
-        this.strokes = [];
-        Sound.play('pop');
-        this.draw();
-      });
+      const btnUndo = r.querySelector('[data-act="undo"]');
+      if (btnUndo) {
+        btnUndo.addEventListener('click', () => {
+          this.strokes.pop();
+          Sound.play('click');
+          this.draw();
+        });
+      }
+      const btnClear = r.querySelector('[data-act="clear"]');
+      if (btnClear) {
+        btnClear.addEventListener('click', () => {
+          this.strokes = [];
+          Sound.play('pop');
+          this.draw();
+        });
+      }
       const ans = r.querySelector('[data-act="answer"]');
-      ans.addEventListener('click', () => {
-        this.showAns = !this.showAns;
-        ans.classList.toggle('active', this.showAns);
-        Sound.play('toggle');
-        this.draw();
-      });
+      if (ans) {
+        ans.addEventListener('click', () => {
+          this.showAns = !this.showAns;
+          ans.classList.toggle('active', this.showAns);
+          Sound.play('toggle');
+          this.draw();
+        });
+      }
 
       const cv = this.view.canvas;
       cv.addEventListener('pointerdown', (e) => {
@@ -126,57 +195,16 @@
       return b;
     }
 
-    drawAnswer(p) {
-      const v = this.view, c = v.ctx;
-      const f = this.type === 'ht' ? F : -F;
-      const { d, h } = this.cfg;
-      const dp = (d * f) / (d - f), hp = (-h * dp) / d;
-      const virtual = dp < 0;
-      const xr = v.xmax + 2;
-      c.save();
-      c.globalAlpha = 0.85;
-      const rays = [
-        [0, PAPER_PALETTE.rayP],
-        [h / -d, PAPER_PALETTE.rayO],
-      ];
-      rays.forEach(([m, col]) => {
-        const r = traceRay(-d, h, m, f, xr);
-        if (virtual) r.segs.push({ x1: 0, y1: r.yh, x2: dp, y2: r.yh + r.m2 * dp, dashed: true });
-        if (this.type === 'pk' && m === 0) r.segs.push({ x1: 0, y1: r.yh, x2: f, y2: 0, dashed: true });
-        Draw.rayPath(v, p, r.segs, col);
-      });
-      Draw.arrowObj(v, p, dp, hp, PAPER_PALETTE.img, { base: "A'", tip: "B'", dashed: virtual });
-      c.restore();
-    }
-
     draw() {
-      const v = this.view, c = v.ctx, p = PAPER_PALETTE;
-      Draw.background(v, p, 2);
-      Draw.axis(v, p, false);
-      Draw.lens(v, p, this.type, v.ymax * 0.85, { shape: false });
-      Draw.foci(v, p, F);
-      Draw.arrowObj(v, p, -this.cfg.d, this.cfg.h, p.obj, { base: 'A', tip: 'B' });
-      if (this.showAns) this.drawAnswer(p);
-
       const all = this.cur ? [...this.strokes, this.cur] : this.strokes;
-      all.forEach((s) => {
-        c.save();
-        c.strokeStyle = s.color;
-        c.lineWidth = s.tool === 'pen' ? 2.2 : 2;
-        c.lineCap = 'round';
-        c.lineJoin = 'round';
-        if (s.tool === 'dash') c.setLineDash([7, 6]);
-        c.beginPath();
-        s.pts.forEach(([x, y], i) => (i ? c.lineTo(v.X(x), v.Y(y)) : c.moveTo(v.X(x), v.Y(y))));
-        c.stroke();
-        c.restore();
-      });
+      drawPadContent(this.view, this.type, all, !IS_STUDENT_PAGE && this.showAns);
     }
 
     reset() {
       this.strokes = [];
       this.showAns = false;
-      this.root.querySelector('[data-act="answer"]').classList.remove('active');
+      const ans = this.root.querySelector('[data-act="answer"]');
+      if (ans) ans.classList.remove('active');
       this.draw();
     }
   }
@@ -184,9 +212,41 @@
   const pads = [...document.querySelectorAll('.ws-draw')].map((r) => new SketchPad(r));
   document.addEventListener('tabshown', (e) => {
     if (e.detail === 'phieu') {
-      pads.forEach((p) => { p.view.resize(); p.draw(); });
+      pads.forEach((p) => {
+        p.view.resize();
+        p.draw();
+      });
     }
   });
+
+  // Nén nét vẽ để truyền qua mạng nhanh gọn (< 2 KB)
+  function compactStrokes(strokes) {
+    return (strokes || []).slice(0, 35).map((s) => {
+      let pts = s.pts || [];
+      if (pts.length > 24) {
+        const step = (pts.length - 1) / 23;
+        pts = Array.from({ length: 24 }, (_, i) => pts[Math.round(i * step)]);
+      }
+      return {
+        tool: s.tool,
+        color: s.color,
+        pts: pts.map(([x, y]) => [Math.round(x * 10) / 10, Math.round(y * 10) / 10]),
+      };
+    });
+  }
+
+  // Dựng ảnh canvas offscreen cho 1 khung vẽ bất kỳ (dùng khi GV xem bài nộp của HS)
+  function renderOffscreenPad(type, strokes) {
+    const cv = document.createElement('canvas');
+    cv.style.width = '520px';
+    cv.style.height = '346px';
+    document.body.appendChild(cv);
+    cv.getBoundingClientRect = () => ({ width: 520, height: 346 });
+    const v = new LensView(cv, 64);
+    drawPadContent(v, type, strokes || [], false);
+    cv.remove();
+    return cv;
+  }
 
   // ---------- TRẠM MÃ QR DÀNH CHO GIÁO VIÊN ----------
   const PUBLIC_WORKSHEET_URL = 'https://minhlfc.github.io/nhom5-natural-thau-kinh/phieu-hoc-tap.html';
@@ -321,35 +381,48 @@
 
   // ---------- Chấm điểm ----------
   const result = document.getElementById('ws-result');
-  function gradeWorksheet(highlight = true) {
-    const qs = [...document.querySelectorAll('select.ws-q')];
+
+  function evaluateValues(vals) {
     let ok = 0;
-    const answers = [];
-    qs.forEach((s) => {
-      if (highlight) s.classList.remove('ok', 'bad');
-      const good = s.value === s.dataset.ans;
-      if (highlight) s.classList.add(good ? 'ok' : 'bad');
+    const answers = ANS_KEYS.map((ansKey, i) => {
+      const val = (vals && vals[i]) || '';
+      const good = val === ansKey;
       if (good) ok++;
-      answers.push({
-        label: s.dataset.label || '',
-        val: s.value,
-        text: OPT_TEXT[s.value] || '(Chưa chọn)',
+      return {
+        val,
+        text: OPT_TEXT[val] || '(Chưa chọn)',
         good,
-      });
+      };
     });
-    return { ok, total: qs.length, answers };
+    return { ok, total: ANS_KEYS.length, answers, vals };
   }
 
-  document.getElementById('ws-check').addEventListener('click', () => {
-    const { ok, total } = gradeWorksheet(true);
-    const name = document.getElementById('ws-name').value.trim();
-    const all = ok === total;
-    result.className = 'result ' + (all ? 'ok' : 'bad');
-    result.textContent = all
-      ? `🎉 Xuất sắc${name ? ', ' + name : ''}! Đúng ${ok}/${total} câu.`
-      : `Đúng ${ok}/${total} câu. Hãy xem lại các ô màu đỏ và làm lại thí nghiệm nhé!`;
-    Sound.play(all ? 'correct' : 'wrong');
-  });
+  function gradeWorksheet(highlight = true) {
+    const qs = [...document.querySelectorAll('select.ws-q')];
+    const vals = qs.map((s) => s.value);
+    const info = evaluateValues(vals);
+    if (highlight && !IS_STUDENT_PAGE) {
+      qs.forEach((s, i) => {
+        s.classList.remove('ok', 'bad');
+        s.classList.add(info.answers[i].good ? 'ok' : 'bad');
+      });
+    }
+    return info;
+  }
+
+  const btnCheck = document.getElementById('ws-check');
+  if (btnCheck && !IS_STUDENT_PAGE) {
+    btnCheck.addEventListener('click', () => {
+      const { ok, total } = gradeWorksheet(true);
+      const name = document.getElementById('ws-name').value.trim();
+      const all = ok === total;
+      result.className = 'result ' + (all ? 'ok' : 'bad');
+      result.textContent = all
+        ? `🎉 Xuất sắc${name ? ', ' + name : ''}! Đúng ${ok}/${total} câu.`
+        : `Đúng ${ok}/${total} câu. Hãy xem lại các ô màu đỏ và làm lại thí nghiệm nhé!`;
+      Sound.play(all ? 'correct' : 'wrong');
+    });
+  }
 
   // ---------- Vẽ ảnh tổng hợp toàn bộ Phiếu học tập (PNG chất lượng cao) ----------
   function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
@@ -370,11 +443,19 @@
     return curY;
   }
 
-  function renderWorksheetImage(gradeInfo) {
-    const name = document.getElementById('ws-name').value.trim() || 'Chưa ghi tên';
-    const cls = document.getElementById('ws-class').value.trim() || '—';
-    const note = document.getElementById('ws-note').value.trim() || '(Học sinh chưa ghi nhận xét)';
-    const nowStr = new Date().toLocaleString('vi-VN');
+  /**
+   * Dựng ảnh Phiếu học tập:
+   * - Khi Học sinh tải/xem trên phieu-hoc-tap.html: showGrade = false (KHÔNG lộ điểm, KHÔNG lộ đúng/sai ✓/✗)
+   * - Khi Giáo viên xem trên index.html: showGrade = true (Hiện điểm chấm tự động & dấu ✓/✗ từng câu)
+   */
+  function renderWorksheetImage(data, opts = {}) {
+    const { showGrade = false } = opts;
+    const name = data.n || 'Chưa ghi tên';
+    const cls = data.c || '—';
+    const note = data.note || '(Học sinh chưa ghi nhận xét)';
+    const nowStr = data.t || new Date().toLocaleString('vi-VN');
+    const gradeInfo = data.gradeInfo || evaluateValues(data.vals || []);
+    const padCanvases = data.padCanvases || pads.map((p) => p.view.canvas);
 
     const W = 1200, H = 1480;
     const cv = document.createElement('canvas');
@@ -382,14 +463,12 @@
     cv.height = H;
     const c = cv.getContext('2d');
 
-    // Nền giấy trắng
     c.fillStyle = '#ffffff';
     c.fillRect(0, 0, W, H);
     c.strokeStyle = '#0d4a7a';
     c.lineWidth = 6;
     c.strokeRect(18, 18, W - 36, H - 36);
 
-    // Header: Logo + Tiêu đề
     const logo = document.querySelector('.ws-logo');
     if (logo && logo.complete && logo.naturalWidth) {
       const lw = 340;
@@ -407,7 +486,6 @@
     c.font = '600 16px "Be Vietnam Pro", sans-serif';
     c.fillText(`Thời gian nộp: ${nowStr}`, W - 48, 130);
 
-    // Khung thông tin HS & Điểm
     c.fillStyle = '#f3f7fc';
     c.strokeStyle = '#cfdceb';
     c.lineWidth = 2;
@@ -420,15 +498,19 @@
     c.fillText(`Họ và tên: ${name}`, 68, 200);
     c.fillText(`Lớp: ${cls}`, 620, 200);
 
-    // Huy hiệu điểm
-    c.fillStyle = gradeInfo.ok === gradeInfo.total ? '#16a34a' : '#0d4a7a';
-    c.fillRect(W - 310, 169, 245, 46);
+    // Huy hiệu góc phải: Giáo viên thấy điểm, Học sinh chỉ thấy "Đã nộp bài"
+    c.fillStyle = showGrade ? (gradeInfo.ok === gradeInfo.total ? '#16a34a' : '#0d4a7a') : '#0d4a7a';
+    c.fillRect(W - 320, 169, 255, 46);
     c.fillStyle = '#ffffff';
     c.textAlign = 'center';
-    c.font = '800 20px "Be Vietnam Pro", sans-serif';
-    c.fillText(`Kết quả: ${gradeInfo.ok}/${gradeInfo.total} câu đúng`, W - 187, 199);
+    c.font = '800 19px "Be Vietnam Pro", sans-serif';
+    c.fillText(
+      showGrade ? `Điểm: ${gradeInfo.ok}/${gradeInfo.total} câu đúng` : 'Trạng thái: Đã nộp bài',
+      W - 192,
+      198
+    );
 
-    // Phần 1: Bảng đường truyền tia sáng
+    // Phần 1
     c.textAlign = 'left';
     c.fillStyle = '#0d4a7a';
     c.font = '800 22px "Be Vietnam Pro", sans-serif';
@@ -442,7 +524,6 @@
     const tx = 45, ty = 285, tw = W - 90, rh = 54;
     const cw = [360, (tw - 360) / 2, (tw - 360) / 2];
 
-    // Header bảng
     c.fillStyle = '#e7eff8';
     c.fillRect(tx, ty, tw, 46);
     c.strokeStyle = '#b9cde3';
@@ -470,13 +551,19 @@
 
       [r[1], r[2]].forEach((ans, j) => {
         const x0 = tx + cw[0] + (j === 1 ? cw[1] : 0) + 14;
-        c.fillStyle = ans.good ? '#15803d' : '#dc2626';
-        c.font = '700 16px "Be Vietnam Pro", sans-serif';
-        c.fillText(`${ans.good ? '✓' : '✗'} ${ans.text}`, x0, y + 33);
+        if (showGrade) {
+          c.fillStyle = ans.good ? '#15803d' : '#dc2626';
+          c.font = '700 16px "Be Vietnam Pro", sans-serif';
+          c.fillText(`${ans.good ? '✓' : '✗'} ${ans.text}`, x0, y + 33);
+        } else {
+          c.fillStyle = '#10233a';
+          c.font = '600 16px "Be Vietnam Pro", sans-serif';
+          c.fillText(ans.text, x0, y + 33);
+        }
       });
     });
 
-    // Phần 2: Hình vẽ ảnh qua TKHT & TKPK
+    // Phần 2
     const y2 = 535;
     c.fillStyle = '#0d4a7a';
     c.font = '800 22px "Be Vietnam Pro", sans-serif';
@@ -484,7 +571,7 @@
 
     const boxW = (W - 114) / 2;
     const boxH = 360;
-    pads.forEach((pad, idx) => {
+    [0, 1].forEach((idx) => {
       const bx = 45 + idx * (boxW + 24);
       const by = y2 + 18;
       c.fillStyle = '#f8fafd';
@@ -501,7 +588,9 @@
         by + 28
       );
 
-      c.drawImage(pad.view.canvas, bx + 12, by + 40, boxW - 24, boxH - 12);
+      if (padCanvases[idx]) {
+        c.drawImage(padCanvases[idx], bx + 12, by + 40, boxW - 24, boxH - 12);
+      }
 
       const baseIdx = idx === 0 ? 6 : 9;
       const p1 = gradeInfo.answers[baseIdx];
@@ -509,14 +598,13 @@
       const p3 = gradeInfo.answers[baseIdx + 2];
       c.fillStyle = '#10233a';
       c.font = '700 16px "Be Vietnam Pro", sans-serif';
-      c.fillText(
-        `Tính chất ảnh A'B': ${p1.text} (${p1.good ? '✓' : '✗'}) · ${p2.text} (${p2.good ? '✓' : '✗'}) · ${p3.text} (${p3.good ? '✓' : '✗'})`,
-        bx + 14,
-        by + boxH + 62
-      );
+      const propStr = showGrade
+        ? `Ảnh A'B': ${p1.text} (${p1.good ? '✓' : '✗'}) · ${p2.text} (${p2.good ? '✓' : '✗'}) · ${p3.text} (${p3.good ? '✓' : '✗'})`
+        : `Ảnh A'B': ${p1.text} · ${p2.text} · ${p3.text}`;
+      c.fillText(propStr, bx + 14, by + boxH + 62);
     });
 
-    // Phần 3: Nhận xét của học sinh
+    // Phần 3
     const y3 = 1045;
     c.fillStyle = '#0d4a7a';
     c.font = '800 22px "Be Vietnam Pro", sans-serif';
@@ -534,12 +622,12 @@
     c.textAlign = 'center';
     c.fillStyle = '#5b6d82';
     c.font = '600 15px "Be Vietnam Pro", sans-serif';
-    c.fillText('Phiếu học tập điện tử được tạo từ Phòng thí nghiệm ảo Bài 8: Thấu kính – Nhóm Natural (Trường ĐHSP TP.HCM)', W / 2, H - 36);
+    c.fillText('Phiếu học tập điện tử – Bài 8: Thấu kính · Nhóm Natural (Trường ĐHSP TP.HCM)', W / 2, H - 36);
 
     return cv;
   }
 
-  // ---------- Lưu & Đồng bộ Hộp bài nộp của Giáo viên ----------
+  // ---------- ĐỒNG BỘ HỘP BÀI NỘP CỦA GIÁO VIÊN (REAL-TIME QUA MẠNG) ----------
   const bc = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('natural-ws-channel') : null;
 
   function getInboxList() {
@@ -550,63 +638,199 @@
     }
   }
 
-  function saveToInbox(entry) {
+  function saveToInbox(entry, notify = false) {
+    if (!entry || !entry.n) return false;
     const list = getInboxList();
+    const uid = entry.id || `${entry.n}_${entry.c}_${entry.t}`;
+    if (list.some((x) => (x.id || `${x.n}_${x.c}_${x.t}`) === uid)) {
+      return false; // Đã có trong danh sách
+    }
+    entry.id = uid;
     list.unshift(entry);
-    localStorage.setItem('natural-ws-inbox', JSON.stringify(list.slice(0, 50)));
+    localStorage.setItem('natural-ws-inbox', JSON.stringify(list.slice(0, 80)));
     updateInboxUI();
+    if (notify && !IS_STUDENT_PAGE) {
+      Sound.play('correct');
+      showToast(`📥 Học sinh ${entry.n} (${entry.c}) vừa nộp bài! Điểm: ${entry.s}`);
+    }
+    return true;
   }
 
-  function updateInboxUI() {
-    const cnt = document.getElementById('inbox-count');
-    const listEl = document.getElementById('inbox-list');
-    const list = getInboxList();
-    if (cnt) cnt.textContent = list.length;
-    if (!listEl) return;
+  // Mở hộp thoại xem chi tiết phiếu + hình vẽ của 1 học sinh bất kỳ (dành cho Giáo viên)
+  let currentTeacherDetailCanvas = null;
+  let currentTeacherDetailName = 'PhieuHocTap.png';
+
+  function openStudentDetailModal(entry) {
+    const modal = document.getElementById('student-detail-modal');
+    if (!modal) return;
+    const padHt = renderOffscreenPad('ht', entry.drw?.ht || []);
+    const padPk = renderOffscreenPad('pk', entry.drw?.pk || []);
+    const gradeInfo = evaluateValues(entry.vals || []);
+    currentTeacherDetailCanvas = renderWorksheetImage(
+      {
+        n: entry.n,
+        c: entry.c,
+        t: entry.t,
+        note: entry.note,
+        gradeInfo,
+        padCanvases: [padHt, padPk],
+      },
+      { showGrade: true }
+    );
+    const safeName = (entry.n || 'HS').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '_');
+    currentTeacherDetailName = `PhieuDaCham_${safeName}_${entry.c || ''}.png`;
+    document.getElementById('stu-detail-title').textContent = `Phiếu của ${entry.n} (Lớp ${entry.c}) – Điểm: ${gradeInfo.ok}/${gradeInfo.total}`;
+    document.getElementById('stu-detail-img').src = currentTeacherDetailCanvas.toDataURL('image/png');
+    modal.classList.remove('hidden');
+    Sound.play('pop');
+  }
+
+  const btnStuDetailDl = document.getElementById('btn-stu-detail-dl');
+  if (btnStuDetailDl) {
+    btnStuDetailDl.addEventListener('click', () => {
+      if (!currentTeacherDetailCanvas) return;
+      const a = document.createElement('a');
+      a.download = currentTeacherDetailName;
+      a.href = currentTeacherDetailCanvas.toDataURL('image/png');
+      a.click();
+      showToast('⬇ Đã tải ảnh Phiếu đã chấm của học sinh!');
+    });
+  }
+
+  function renderInboxListHTML(list) {
     if (!list.length) {
-      listEl.innerHTML = '<div class="muted" style="text-align:center;padding:24px">Chưa có bài nộp nào. Khi học sinh nộp bài hoặc khi GV dán Mã bài nộp, kết quả sẽ hiện tại đây.</div>';
-      return;
+      return '<div class="muted" style="text-align:center;padding:22px">Chưa có học sinh nào nộp bài. Khi học sinh bấm <b>“🚀 Nộp bài cho Giáo viên”</b> ở link <code>phieu-hoc-tap.html</code>, bài làm sẽ tự động hiện ngay tại đây.</div>';
     }
-    listEl.innerHTML = list
+    return list
       .map(
         (it, i) => `
       <div class="inbox-item">
         <div>
           <b>${i + 1}. ${it.n}</b> <span class="badge">Lớp: ${it.c}</span>
-          <div class="muted" style="font-size:.82rem">Điểm trắc nghiệm: <b style="color:var(--ok)">${it.s}</b> · Nộp lúc: ${it.t}</div>
+          <div class="muted" style="font-size:.82rem">Điểm tự động: <b style="color:var(--ok)">${it.s || '—'}</b> · Nộp lúc: ${it.t || ''}</div>
           ${it.note ? `<div style="font-size:.85rem;margin-top:4px">💬 <i>${it.note}</i></div>` : ''}
         </div>
-        <span class="role-badge leader">${it.s}</span>
+        <div class="row-actions">
+          <button class="btn btn-primary btn-tiny" data-view-idx="${i}">👁 Xem phiếu &amp; hình vẽ</button>
+        </div>
       </div>`
       )
       .join('');
   }
 
+  function updateInboxUI() {
+    const list = getInboxList();
+    const cnt1 = document.getElementById('inbox-count');
+    const cnt2 = document.getElementById('live-inbox-count');
+    if (cnt1) cnt1.textContent = list.length;
+    if (cnt2) cnt2.textContent = list.length;
+
+    const html = renderInboxListHTML(list);
+    ['inbox-list', 'live-inbox-list'].forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.innerHTML = html;
+      el.querySelectorAll('[data-view-idx]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const item = list[+btn.dataset.viewIdx];
+          if (item) openStudentDetailModal(item);
+        });
+      });
+    });
+  }
+
+  // Kênh nhận bài trực tuyến cho trang Giáo viên
+  async function syncCloudSubmissions(showNotice = false) {
+    if (IS_STUDENT_PAGE) return;
+    try {
+      const res = await fetch(`${CLOUD_BASE}/json?poll=1&since=all`, { cache: 'no-store' });
+      const text = await res.text();
+      const lines = text.trim().split('\n').filter(Boolean);
+      let added = 0;
+      for (const line of lines) {
+        try {
+          const ev = JSON.parse(line);
+          if (ev.event === 'message' && ev.message) {
+            const payload = JSON.parse(ev.message);
+            if (payload && payload.n && saveToInbox(payload, false)) {
+              added++;
+            }
+          }
+        } catch {
+          /* bỏ qua dòng lỗi */
+        }
+      }
+      if (added > 0) {
+        Sound.play('correct');
+        showToast(`📥 Đã nhận thêm ${added} bài nộp mới từ Học sinh!`);
+      } else if (showNotice) {
+        showToast('✔ Danh sách bài nộp đã được cập nhật mới nhất');
+      }
+    } catch {
+      if (showNotice) showToast('⚠️ Không thể kết nối máy chủ đồng bộ');
+    }
+  }
+
+  if (!IS_STUDENT_PAGE) {
+    updateInboxUI();
+    syncCloudSubmissions(false);
+
+    // Lắng nghe SSE thời gian thực (< 0.5 giây khi HS bấm nộp)
+    if (typeof EventSource !== 'undefined') {
+      try {
+        const es = new EventSource(`${CLOUD_BASE}/sse`);
+        es.onmessage = (e) => {
+          try {
+            const ev = JSON.parse(e.data);
+            if (ev.event === 'message' && ev.message) {
+              const payload = JSON.parse(ev.message);
+              saveToInbox(payload, true);
+            }
+          } catch {
+            /* bỏ qua */
+          }
+        };
+      } catch {
+        /* fallback qua bộ đếm định kỳ */
+      }
+    }
+    setInterval(() => syncCloudSubmissions(false), 7000);
+  }
+
   if (bc) {
     bc.onmessage = (ev) => {
       if (ev.data && ev.data.type === 'ws-submit') {
-        saveToInbox(ev.data.payload);
-        showToast(`📥 Học sinh ${ev.data.payload.n} (${ev.data.payload.c}) vừa nộp phiếu!`);
+        saveToInbox(ev.data.payload, true);
       }
     };
   }
-  updateInboxUI();
 
-  const btnInboxOpen = document.getElementById('btn-inbox-open');
-  if (btnInboxOpen) {
-    btnInboxOpen.addEventListener('click', () => {
-      updateInboxUI();
-      document.getElementById('inbox-modal').classList.remove('hidden');
-      Sound.play('pop');
-    });
-    document.getElementById('btn-inbox-import').addEventListener('click', () => {
+  const btnLiveRefresh = document.getElementById('btn-live-refresh');
+  if (btnLiveRefresh) {
+    btnLiveRefresh.addEventListener('click', () => syncCloudSubmissions(true));
+  }
+
+  ['btn-inbox-open', 'btn-inbox-open-2'].forEach((id) => {
+    const b = document.getElementById(id);
+    if (b) {
+      b.addEventListener('click', () => {
+        updateInboxUI();
+        document.getElementById('inbox-modal').classList.remove('hidden');
+        Sound.play('pop');
+      });
+    }
+  });
+
+  const btnInboxImport = document.getElementById('btn-inbox-import');
+  if (btnInboxImport) {
+    btnInboxImport.addEventListener('click', () => {
       const raw = document.getElementById('inbox-import-input').value.trim();
       if (!raw) return;
       try {
         const code = raw.includes('code=') ? decodeURIComponent(raw.split('code=')[1].split('&')[0]) : raw;
         const json = decodeURIComponent(escape(atob(code)));
         const data = JSON.parse(json);
-        saveToInbox(data);
+        saveToInbox(data, false);
         document.getElementById('inbox-import-input').value = '';
         Sound.play('correct');
         showToast(`✔ Đã nhập bài của ${data.n} (${data.c})!`);
@@ -616,7 +840,7 @@
       }
     });
     document.getElementById('btn-inbox-clear').addEventListener('click', () => {
-      if (!confirm('Xoá danh sách bài nộp trên máy này?')) return;
+      if (!confirm('Xoá danh sách bài nộp lưu trên trình duyệt này?')) return;
       localStorage.removeItem('natural-ws-inbox');
       updateInboxUI();
     });
@@ -647,75 +871,124 @@
         return;
       }
 
-      const g = gradeWorksheet(true);
-      result.className = 'result ' + (g.ok === g.total ? 'ok' : 'bad');
-      result.textContent = `Đã chấm: ${g.ok}/${g.total} câu đúng.`;
+      // Chấm ngầm để gửi điểm cho Giáo viên (nhưng KHÔNG hiển thị đúng/sai trên màn hình Học sinh)
+      const g = gradeWorksheet(!IS_STUDENT_PAGE);
+      if (!IS_STUDENT_PAGE && result) {
+        result.className = 'result ' + (g.ok === g.total ? 'ok' : 'bad');
+        result.textContent = `Đã chấm: ${g.ok}/${g.total} câu đúng.`;
+      } else if (result) {
+        result.className = 'result ok';
+        result.textContent = '✔ Đã nộp bài cho Giáo viên!';
+      }
 
-      // Vẽ ảnh phiếu
-      lastRenderedCanvas = renderWorksheetImage(g);
+      const nowStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const noteText = document.getElementById('ws-note').value.trim();
+
+      // Vẽ ảnh phiếu (bên Học sinh không hiện điểm/đáp án; bên Giáo viên hiện đầy đủ)
+      lastRenderedCanvas = renderWorksheetImage(
+        {
+          n: name,
+          c: cls,
+          t: nowStr,
+          note: noteText,
+          gradeInfo: g,
+        },
+        { showGrade: !IS_STUDENT_PAGE }
+      );
+
       const safeName = name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '_');
       const safeCls = cls.replace(/[^a-zA-Z0-9]+/g, '_');
       lastFileName = `PhieuHocTap_Bai8_${safeName}_${safeCls}.png`;
 
       const dataUrl = lastRenderedCanvas.toDataURL('image/png');
       document.getElementById('sub-preview-img').src = dataUrl;
-      document.getElementById('sub-title').textContent = `🎉 Đã hoàn thành phiếu của ${name} (${cls}) – ${g.ok}/${g.total} câu đúng!`;
+      document.getElementById('sub-title').textContent = IS_STUDENT_PAGE
+        ? `🎉 Đã nộp Phiếu học tập của ${name} (${cls})!`
+        : `🎉 Đã hoàn thành phiếu của ${name} (${cls}) – ${g.ok}/${g.total} câu đúng!`;
 
-      // Tạo gói kết quả gọn cho Mã QR & Hộp bài nộp
+      // Đóng gói toàn bộ dữ liệu bài làm (gồm cả 12 câu trả lời + nét vẽ 2 thấu kính) để gửi về trang Giáo viên
       const payload = {
+        id: `sub_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
         n: name,
         c: cls,
         s: `${g.ok}/${g.total}`,
-        t: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
-        note: document.getElementById('ws-note').value.trim().slice(0, 120),
+        t: nowStr,
+        vals: g.vals,
+        note: noteText.slice(0, 220),
+        drw: {
+          ht: compactStrokes(pads[0]?.strokes),
+          pk: compactStrokes(pads[1]?.strokes),
+        },
       };
+
       const codeStr = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
       document.getElementById('sub-code-text').value = codeStr;
 
       const cvResQr = document.getElementById('cv-qr-result');
       if (cvResQr && typeof QR !== 'undefined') {
         try {
-          QR.render(cvResQr, codeStr, { size: 180 });
+          QR.render(cvResQr, `${name} (${cls}) - Ma: ${payload.id}`, { size: 160 });
         } catch {
-          QR.render(cvResQr, `${name} - ${cls}: ${g.ok}/${g.total}`, { size: 180 });
+          /* bỏ qua */
         }
       }
 
-      // Lưu vào hộp bài nộp & phát qua BroadcastChannel
-      saveToInbox(payload);
+      // Lưu cục bộ & bắn qua BroadcastChannel (nếu cùng máy)
+      if (!IS_STUDENT_PAGE) saveToInbox(payload, false);
       if (bc) bc.postMessage({ type: 'ws-submit', payload });
 
-      // Kiểm tra link nhận bài của GV (từ tham số URL ?submit= hoặc ô cấu hình của GV)
+      document.getElementById('submit-modal').classList.remove('hidden');
+      Sound.play('correct');
+
+      // Gửi trực tuyến lên kênh Cloud để máy Giáo viên nhận ngay lập tức
+      const badgeStatus = document.getElementById('sub-badge-status');
+      const liveStatus = document.getElementById('sub-live-status');
+      try {
+        if (badgeStatus) badgeStatus.textContent = '📡 Đang đồng bộ bài làm về máy Giáo viên...';
+        await fetch(CLOUD_BASE, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+          body: JSON.stringify(payload),
+        });
+        if (badgeStatus) badgeStatus.textContent = '✅ Giáo viên đã nhận được bài của em!';
+        if (liveStatus) {
+          liveStatus.innerHTML =
+            '<div class="sub-status-icon">✅</div><div class="sub-status-text">Đã gửi bài làm trực tuyến về trang của Giáo viên thành công!</div>';
+        }
+        showToast('✅ Đã gửi bài nộp tới Giáo viên thành công!');
+      } catch {
+        if (badgeStatus) badgeStatus.textContent = '⚠️ Chế độ ngoại tuyến';
+        if (liveStatus) {
+          liveStatus.innerHTML =
+            '<div class="sub-status-icon">⚠️</div><div class="sub-status-text">Mạng yếu – em hãy bấm "Tải ảnh Phiếu" hoặc chép Mã bài nộp gửi cho Giáo viên nhé.</div>';
+        }
+      }
+
+      // Hỗ trợ thêm Webhook riêng nếu GV cấu hình
       const params = new URLSearchParams(window.location.search);
       const submitTarget = params.get('submit') || localStorage.getItem('natural-qr-submit') || '';
       const extBtn = document.getElementById('btn-sub-ext-link');
       const statusEl = document.getElementById('sub-webhook-status');
-      statusEl.textContent = '';
+      if (statusEl) statusEl.textContent = '';
 
       if (submitTarget) {
         extBtn.style.display = '';
         extBtn.onclick = () => window.open(submitTarget, '_blank');
         if (submitTarget.includes('script.google.com') || submitTarget.includes('webhook')) {
-          statusEl.textContent = '⏳ Đang gửi kết quả về hệ thống của Giáo viên...';
           try {
             await fetch(submitTarget, {
               method: 'POST',
               mode: 'no-cors',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ ...payload, image: dataUrl }),
+              body: JSON.stringify(payload),
             });
-            statusEl.textContent = '✅ Đã gửi dữ liệu bài làm về hệ thống của Giáo viên!';
-            statusEl.style.color = 'var(--ok)';
           } catch {
-            statusEl.textContent = '⚠️ Không kết nối được webhook, em hãy tải ảnh phiếu để nộp nhé.';
+            /* bỏ qua */
           }
         }
-      } else {
+      } else if (extBtn) {
         extBtn.style.display = 'none';
       }
-
-      document.getElementById('submit-modal').classList.remove('hidden');
-      Sound.play('correct');
     });
   }
 
@@ -732,7 +1005,7 @@
     });
   }
 
-  // Nút chia sẻ nhanh trên điện thoại (Web Share API)
+  // Nút chia sẻ nhanh trên điện thoại
   const btnSubShare = document.getElementById('btn-sub-share');
   if (btnSubShare) {
     btnSubShare.addEventListener('click', () => {
@@ -749,15 +1022,14 @@
             });
             return;
           } catch {
-            /* người dùng huỷ chia sẻ */
+            /* huỷ chia sẻ */
           }
         }
-        // Fallback: tải ảnh về máy
         const a = document.createElement('a');
         a.download = lastFileName;
         a.href = URL.createObjectURL(blob);
         a.click();
-        showToast('⬇ Đã tải ảnh phiếu để em đính kèm gửi Giáo viên!');
+        showToast('⬇ Đã tải ảnh phiếu về máy!');
       }, 'image/png');
     });
   }
@@ -790,7 +1062,7 @@
     });
     document.getElementById('ws-note').value = '';
     pads.forEach((p) => p.reset());
-    result.textContent = '';
+    if (result) result.textContent = '';
     Sound.play('pop');
   });
 })();

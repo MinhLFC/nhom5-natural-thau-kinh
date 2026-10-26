@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Phiếu học tập điện tử – Bài 8: Thấu kính | Nhóm Natural</title>
-  <meta name="description" content="Phiếu học tập điện tử Bài 8: Thấu kính – KHTN 9. Nhóm Natural – Trường Đại học Sư phạm TP. Hồ Chí Minh." />
+  <meta name="description" content="Phiếu học tập điện tử dành cho Học sinh – Bài 8: Thấu kính (KHTN 9). Nhóm Natural – Trường Đại học Sư phạm TP. Hồ Chí Minh." />
   <link rel="icon" href="assets/logo-hcmue.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,20 +18,19 @@
     })();
   </script>
 </head>
-<body class="standalone-ws-body">
+<body class="standalone-ws-body" data-role="student">
   <header class="site-header no-print">
     <div class="container header-inner">
-      <a href="index.html" class="brand">
+      <div class="brand">
         <span class="brand-logo"><img src="assets/logo-hcmue.png" alt="Logo Trường Đại học Sư phạm TP. Hồ Chí Minh" /></span>
         <span class="brand-divider" aria-hidden="true"></span>
         <span class="brand-text">
           <strong>Natural</strong>
           <small>Phiếu học tập · Bài 8: Thấu kính</small>
         </span>
-      </a>
+      </div>
 
       <div class="header-actions" style="margin-left:auto">
-        <a href="index.html#tn1" class="btn btn-ghost btn-small">🔬 Mở phòng thí nghiệm</a>
         <button class="icon-btn" id="btn-sfx" title="Bật/tắt hiệu ứng âm thanh" aria-label="Bật/tắt hiệu ứng âm thanh">
           <svg class="ic-on" viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           <svg class="ic-off" viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3z"/><path d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -51,9 +50,9 @@
     <div class="container">
       <div class="ws-student-banner no-print">
         <div>
-          <span class="badge">Hoạt động 2.2 · Học sinh thực hiện</span>
-          <h2>Điền Phiếu học tập &amp; Nộp bài cho Giáo viên</h2>
-          <p class="muted">Em hãy nhập đầy đủ <b>Họ và tên</b>, <b>Lớp</b>, hoàn thành 3 phần bên dưới rồi bấm <b>“🚀 Nộp bài cho Giáo viên”</b> để xuất ảnh phiếu hoặc gửi kết quả.</p>
+          <span class="badge">Hoạt động 2.2 · Phiếu làm bài của Học sinh</span>
+          <h2>Phiếu học tập điện tử – Bài 8: Thấu kính</h2>
+          <p class="muted">Em hãy nhập đầy đủ <b>Họ và tên</b>, <b>Lớp</b>, hoàn thành 3 phần bên dưới rồi bấm <b>“🚀 Nộp bài cho Giáo viên”</b> để gửi bài trực tiếp về máy của Giáo viên.</p>
         </div>
       </div>
 
@@ -113,7 +112,6 @@
               </span>
               <button class="tool" data-act="undo" title="Hoàn tác">↶</button>
               <button class="tool" data-act="clear" title="Xoá hết">🗑</button>
-              <button class="tool" data-act="answer" title="Xem đáp án">👁 Đáp án</button>
             </div>
             <canvas class="cv-pad"></canvas>
             <div class="img-props">
@@ -137,7 +135,6 @@
               </span>
               <button class="tool" data-act="undo" title="Hoàn tác">↶</button>
               <button class="tool" data-act="clear" title="Xoá hết">🗑</button>
-              <button class="tool" data-act="answer" title="Xem đáp án">👁 Đáp án</button>
             </div>
             <canvas class="cv-pad"></canvas>
             <div class="img-props">
@@ -154,7 +151,6 @@
 
         <div class="row-actions no-print ws-actions">
           <button class="btn btn-accent" id="ws-submit">🚀 Nộp bài cho Giáo viên</button>
-          <button class="btn btn-primary" id="ws-check">✔ Kiểm tra đáp án</button>
           <button class="btn btn-ghost" id="ws-print">🖨 In / Lưu PDF</button>
           <button class="btn btn-ghost" id="ws-reset">↺ Làm lại</button>
           <span class="result" id="ws-result"></span>
@@ -163,14 +159,14 @@
     </div>
   </main>
 
-  <!-- MODAL NỘP BÀI CỦA HỌC SINH -->
+  <!-- MODAL XÁC NHẬN ĐÃ NỘP BÀI CỦA HỌC SINH -->
   <div class="modal-backdrop hidden no-print" id="submit-modal" role="dialog" aria-modal="true">
     <div class="modal-card submit-modal-card">
       <button class="modal-close" data-close="submit-modal" aria-label="Đóng">✕</button>
       <div class="submit-head">
-        <span class="badge">Hoàn thành Phiếu học tập</span>
-        <h3 id="sub-title">🎉 Đã tạo Phiếu học tập của em!</h3>
-        <p class="muted" id="sub-desc">Em hãy tải ảnh phiếu (hoặc dùng nút Chia sẻ trên điện thoại) để gửi cho Giáo viên, hoặc đưa Mã QR kết quả bên dưới cho Giáo viên quét.</p>
+        <span class="badge" id="sub-badge-status">📡 Đang gửi bài về máy Giáo viên...</span>
+        <h3 id="sub-title">🎉 Đã nộp Phiếu học tập cho Giáo viên!</h3>
+        <p class="muted" id="sub-desc">Bài làm của em đã được gửi trực tuyến tới hệ thống của Giáo viên. Em cũng có thể tải ảnh phiếu bài làm về máy bên dưới.</p>
       </div>
 
       <div class="submit-grid">
@@ -179,19 +175,23 @@
             <img id="sub-preview-img" alt="Ảnh phiếu học tập đã điền" />
           </div>
           <div class="row-actions" style="justify-content:center; margin-top:10px">
-            <button class="btn btn-accent btn-small" id="btn-sub-dl">⬇ Tải ảnh Phiếu (PNG)</button>
-            <button class="btn btn-primary btn-small" id="btn-sub-share">📤 Chia sẻ / Gửi GV</button>
+            <button class="btn btn-accent btn-small" id="btn-sub-dl">⬇ Tải ảnh Phiếu của em (PNG)</button>
+            <button class="btn btn-primary btn-small" id="btn-sub-share">📤 Chia sẻ ảnh phiếu</button>
             <button class="btn btn-ghost btn-small" id="btn-sub-ext-link" style="display:none">↗ Mở trang nộp bài của GV</button>
           </div>
         </div>
 
         <div class="submit-qr-col">
+          <div class="sub-status-card" id="sub-live-status">
+            <div class="sub-status-icon">⏳</div>
+            <div class="sub-status-text">Đang đồng bộ bài làm lên hệ thống lớp học...</div>
+          </div>
           <div class="sub-qr-box">
-            <canvas id="cv-qr-result" width="180" height="180"></canvas>
-            <small>Mã QR kết quả bài làm (GV quét để chấm nhanh)</small>
+            <canvas id="cv-qr-result" width="160" height="160"></canvas>
+            <small>Mã QR dự phòng của bài làm</small>
           </div>
           <label class="sub-code-label">
-            <span>Mã bài nộp (sao chép gửi GV nếu cần):</span>
+            <span>Mã bài nộp dự phòng:</span>
             <div class="qr-input-group">
               <input type="text" id="sub-code-text" readonly />
               <button class="btn btn-tiny" id="btn-sub-copy-code" type="button">📋 Chép mã</button>
