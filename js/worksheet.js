@@ -642,7 +642,13 @@
     if (!entry || !entry.n) return false;
     const list = getInboxList();
     const uid = entry.id || `${entry.n}_${entry.c}_${entry.t}`;
-    if (list.some((x) => (x.id || `${x.n}_${x.c}_${x.t}`) === uid)) {
+    const existIdx = list.findIndex((x) => (x.id || `${x.n}_${x.c}_${x.t}`) === uid);
+    if (existIdx !== -1) {
+      if (entry.vals && !list[existIdx].vals) {
+        list[existIdx] = { ...list[existIdx], ...entry, id: uid };
+        localStorage.setItem('natural-ws-inbox', JSON.stringify(list.slice(0, 80)));
+        updateInboxUI();
+      }
       return false; // Đã có trong danh sách
     }
     entry.id = uid;
@@ -656,16 +662,55 @@
     return true;
   }
 
+  // Nạp trực tiếp bài làm của học sinh vào Phiếu học tập bên dưới trên màn hình Giáo viên để chữa bài
+  function loadSubmissionIntoForm(entry) {
+    if (!entry || IS_STUDENT_PAGE) return;
+    const nameEl = document.getElementById('ws-name');
+    const classEl = document.getElementById('ws-class');
+    const noteEl = document.getElementById('ws-note');
+    if (nameEl) nameEl.value = entry.n || '';
+    if (classEl) classEl.value = entry.c || '';
+    if (noteEl) noteEl.value = entry.note || '';
+
+    const qs = [...document.querySelectorAll('select.ws-q')];
+    const vals = entry.vals || [];
+    qs.forEach((s, i) => {
+      s.value = vals[i] || '';
+    });
+    const g = gradeWorksheet(true);
+
+    if (pads[0]) {
+      pads[0].strokes = JSON.parse(JSON.stringify(entry.drw?.ht || []));
+      pads[0].view.resize();
+      pads[0].draw();
+    }
+    if (pads[1]) {
+      pads[1].strokes = JSON.parse(JSON.stringify(entry.drw?.pk || []));
+      pads[1].view.resize();
+      pads[1].draw();
+    }
+
+    if (result) {
+      result.className = 'result ' + (g.ok === g.total ? 'ok' : 'bad');
+      result.textContent = `📋 Đang hiển thị bài làm của học sinh: ${entry.n} (Lớp ${entry.c}) — Điểm trắc nghiệm: ${entry.s || `${g.ok}/${g.total}`}`;
+    }
+  }
+
   // Mở hộp thoại xem chi tiết phiếu + hình vẽ của 1 học sinh bất kỳ (dành cho Giáo viên)
   let currentTeacherDetailCanvas = null;
   let currentTeacherDetailName = 'PhieuHocTap.png';
 
   function openStudentDetailModal(entry) {
+    if (!entry) return;
+    // Đồng thời nạp bài của học sinh xuống Phiếu bên dưới để Giáo viên có thể chữa trực tiếp
+    loadSubmissionIntoForm(entry);
+
     const modal = document.getElementById('student-detail-modal');
     if (!modal) return;
     const padHt = renderOffscreenPad('ht', entry.drw?.ht || []);
     const padPk = renderOffscreenPad('pk', entry.drw?.pk || []);
     const gradeInfo = evaluateValues(entry.vals || []);
+    const scoreText = entry.vals ? `${gradeInfo.ok}/${gradeInfo.total}` : (entry.s || `${gradeInfo.ok}/${gradeInfo.total}`);
     currentTeacherDetailCanvas = renderWorksheetImage(
       {
         n: entry.n,
@@ -679,10 +724,22 @@
     );
     const safeName = (entry.n || 'HS').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '_');
     currentTeacherDetailName = `PhieuDaCham_${safeName}_${entry.c || ''}.png`;
-    document.getElementById('stu-detail-title').textContent = `Phiếu của ${entry.n} (Lớp ${entry.c}) – Điểm: ${gradeInfo.ok}/${gradeInfo.total}`;
+    document.getElementById('stu-detail-title').textContent = `Phiếu của ${entry.n} (Lớp ${entry.c}) – Điểm: ${scoreText}`;
     document.getElementById('stu-detail-img').src = currentTeacherDetailCanvas.toDataURL('image/png');
     modal.classList.remove('hidden');
     Sound.play('pop');
+  }
+
+  const btnStuEditLive = document.getElementById('btn-stu-edit-live');
+  if (btnStuEditLive) {
+    btnStuEditLive.addEventListener('click', () => {
+      document.getElementById('student-detail-modal')?.classList.add('hidden');
+      document.getElementById('inbox-modal')?.classList.add('hidden');
+      const ws = document.getElementById('worksheet');
+      if (ws) ws.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      Sound.play('click');
+      showToast('✏️ Đã nạp bài học sinh vào Phiếu bên dưới để Giáo viên chữa trực tiếp!');
+    });
   }
 
   const btnStuDetailDl = document.getElementById('btn-stu-detail-dl');
@@ -704,14 +761,14 @@
     return list
       .map(
         (it, i) => `
-      <div class="inbox-item">
+      <div class="inbox-item" data-row-idx="${i}" title="Bấm vào đây để xem toàn bộ Phiếu học tập và hình vẽ của ${it.n}">
         <div>
           <b>${i + 1}. ${it.n}</b> <span class="badge">Lớp: ${it.c}</span>
           <div class="muted" style="font-size:.82rem">Điểm tự động: <b style="color:var(--ok)">${it.s || '—'}</b> · Nộp lúc: ${it.t || ''}</div>
           ${it.note ? `<div style="font-size:.85rem;margin-top:4px">💬 <i>${it.note}</i></div>` : ''}
         </div>
         <div class="row-actions">
-          <button class="btn btn-primary btn-tiny" data-view-idx="${i}">👁 Xem phiếu &amp; hình vẽ</button>
+          <button type="button" class="btn btn-primary btn-tiny" data-view-idx="${i}">👁 Xem phiếu &amp; hình vẽ</button>
         </div>
       </div>`
       )
@@ -730,9 +787,10 @@
       const el = document.getElementById(id);
       if (!el) return;
       el.innerHTML = html;
-      el.querySelectorAll('[data-view-idx]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const item = list[+btn.dataset.viewIdx];
+      // Bấm vào bất kỳ vị trí nào trên dòng tên học sinh hoặc nút "Xem phiếu & hình vẽ" đều mở ngay bài làm
+      el.querySelectorAll('.inbox-item').forEach((row) => {
+        row.addEventListener('click', () => {
+          const item = list[+row.dataset.rowIdx];
           if (item) openStudentDetailModal(item);
         });
       });
@@ -824,16 +882,22 @@
   const btnInboxImport = document.getElementById('btn-inbox-import');
   if (btnInboxImport) {
     btnInboxImport.addEventListener('click', () => {
-      const raw = document.getElementById('inbox-import-input').value.trim();
-      if (!raw) return;
+      const inp = document.getElementById('inbox-import-input');
+      const raw = inp ? inp.value.trim() : '';
+      if (!raw || (/^https?:\/\//i.test(raw) && !raw.includes('code='))) {
+        if (inp) inp.value = '';
+        syncCloudSubmissions(true);
+        return;
+      }
       try {
         const code = raw.includes('code=') ? decodeURIComponent(raw.split('code=')[1].split('&')[0]) : raw;
         const json = decodeURIComponent(escape(atob(code)));
         const data = JSON.parse(json);
         saveToInbox(data, false);
-        document.getElementById('inbox-import-input').value = '';
+        if (inp) inp.value = '';
         Sound.play('correct');
         showToast(`✔ Đã nhập bài của ${data.n} (${data.c})!`);
+        openStudentDetailModal(data);
       } catch (e) {
         Sound.play('wrong');
         showToast('⚠️ Mã bài nộp không hợp lệ');

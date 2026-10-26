@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css?v=20261026_3" />
   <script>
     // Áp dụng chủ đề sớm để tránh nháy màn hình
     (function () {
@@ -597,11 +597,11 @@
     <div class="modal-card inbox-modal-card">
       <button class="modal-close" data-close="inbox-modal" aria-label="Đóng">✕</button>
       <span class="badge">Dành cho Giáo viên</span>
-      <h3>📂 Hộp bài nộp &amp; Giải mã kết quả Học sinh</h3>
-      <p class="muted">Danh sách các phiếu học sinh đã nộp trực tuyến (tự động đồng bộ từ trang <code>phieu-hoc-tap.html</code>) hoặc dán <b>Mã bài nộp</b> dự phòng.</p>
+      <h3>📂 Hộp bài nộp của Học sinh</h3>
+      <p class="muted">Nhấp trực tiếp vào <b>dòng tên học sinh</b> bên dưới để xem toàn bộ Phiếu học tập, hình vẽ và chữa bài.</p>
       <div class="qr-input-group" style="margin: 10px 0 14px">
-        <input type="text" id="inbox-import-input" placeholder="Dán Mã bài nộp dự phòng của học sinh vào đây..." />
-        <button class="btn btn-primary btn-small" id="btn-inbox-import">➕ Nhập bài</button>
+        <input type="text" id="inbox-import-input" placeholder="Bấm 'Đồng bộ bài nộp' hoặc dán Mã bài nộp dự phòng vào đây..." />
+        <button class="btn btn-primary btn-small" id="btn-inbox-import">🔄 Đồng bộ / Nhập bài</button>
         <button class="btn btn-ghost btn-small" id="btn-inbox-clear">🗑 Xoá bộ nhớ</button>
       </div>
       <div class="inbox-list" id="inbox-list"></div>
@@ -609,17 +609,19 @@
   </div>
 
   <!-- MODAL XEM CHI TIẾT PHIẾU & HÌNH VẼ CỦA HỌC SINH (DÀNH CHO GIÁO VIÊN) -->
-  <div class="modal-backdrop hidden no-print" id="student-detail-modal" role="dialog" aria-modal="true">
-    <div class="modal-card" style="width:min(940px,100%)">
+  <div class="modal-backdrop modal-top hidden no-print" id="student-detail-modal" role="dialog" aria-modal="true">
+    <div class="modal-card" style="width:min(960px,100%)">
       <button class="modal-close" data-close="student-detail-modal" aria-label="Đóng">✕</button>
       <div class="submit-head">
         <span class="badge">Chi tiết bài nộp Học sinh · Chấm tự động</span>
         <h3 id="stu-detail-title">Phiếu học tập của Học sinh</h3>
+        <p class="muted" style="margin:4px 0 0">Bài làm này cũng đã được nạp sẵn vào khung Phiếu học tập bên dưới để Giáo viên có thể chữa trực tiếp.</p>
       </div>
-      <div class="submit-img-wrap" style="max-height:68vh">
+      <div class="submit-img-wrap" style="max-height:66vh">
         <img id="stu-detail-img" alt="Phiếu bài làm chi tiết của học sinh" />
       </div>
       <div class="row-actions" style="justify-content:center; margin-top:14px">
+        <button class="btn btn-primary btn-small" id="btn-stu-edit-live">✏️ Chữa trực tiếp trên Phiếu bên dưới</button>
         <button class="btn btn-accent btn-small" id="btn-stu-detail-dl">⬇ Tải ảnh Phiếu đã chấm (PNG)</button>
         <button class="btn btn-ghost btn-small" data-close="student-detail-modal">Đóng</button>
       </div>
@@ -632,13 +634,13 @@
 
   <div class="toast" id="toast"></div>
 
-  <script src="js/audio.js"></script>
-  <script src="js/optics.js"></script>
-  <script src="js/qrcode.js"></script>
-  <script src="js/theory.js"></script>
-  <script src="js/lab-rays.js"></script>
-  <script src="js/lab-image.js"></script>
-  <script src="js/worksheet.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/audio.js?v=20261026_3"></script>
+  <script src="js/optics.js?v=20261026_3"></script>
+  <script src="js/qrcode.js?v=20261026_3"></script>
+  <script src="js/theory.js?v=20261026_3"></script>
+  <script src="js/lab-rays.js?v=20261026_3"></script>
+  <script src="js/lab-image.js?v=20261026_3"></script>
+  <script src="js/worksheet.js?v=20261026_3"></script>
+  <script src="js/main.js?v=20261026_3"></script>
 </body>
 </html>
