@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phiếu học tập điện tử – Bài 8: Thấu kính | Nhóm Natural</title>
+  <meta name="description" content="Phiếu học tập điện tử Bài 8: Thấu kính – KHTN 9. Nhóm Natural – Trường Đại học Sư phạm TP. Hồ Chí Minh." />
+  <link rel="icon" href="assets/logo-hcmue.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    (function () {
+      var t = localStorage.getItem('natural-theme');
+      if (!t) t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+</head>
+<body class="standalone-ws-body">
+  <header class="site-header no-print">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-logo"><img src="assets/logo-hcmue.png" alt="Logo Trường Đại học Sư phạm TP. Hồ Chí Minh" /></span>
+        <span class="brand-divider" aria-hidden="true"></span>
+        <span class="brand-text">
+          <strong>Natural</strong>
+          <small>Phiếu học tập · Bài 8: Thấu kính</small>
+        </span>
+      </a>
+
+      <div class="header-actions" style="margin-left:auto">
+        <a href="index.html#tn1" class="btn btn-ghost btn-small">🔬 Mở phòng thí nghiệm</a>
+        <button class="icon-btn" id="btn-sfx" title="Bật/tắt hiệu ứng âm thanh" aria-label="Bật/tắt hiệu ứng âm thanh">
+          <svg class="ic-on" viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg class="ic-off" viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3z"/><path d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="icon-btn" id="btn-music" title="Bật/tắt nhạc nền" aria-label="Bật/tắt nhạc nền">
+          <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </button>
+        <button class="icon-btn" id="btn-theme" title="Chuyển chế độ sáng/tối" aria-label="Chuyển chế độ sáng/tối">
+          <svg class="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></g></svg>
+          <svg class="ic-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="section" style="padding-top:28px">
+    <div class="container">
+      <div class="ws-student-banner no-print">
+        <div>
+          <span class="badge">Hoạt động 2.2 · Học sinh thực hiện</span>
+          <h2>Điền Phiếu học tập &amp; Nộp bài cho Giáo viên</h2>
+          <p class="muted">Em hãy nhập đầy đủ <b>Họ và tên</b>, <b>Lớp</b>, hoàn thành 3 phần bên dưới rồi bấm <b>“🚀 Nộp bài cho Giáo viên”</b> để xuất ảnh phiếu hoặc gửi kết quả.</p>
+        </div>
+      </div>
+
+      <div class="worksheet card" id="worksheet">
+        <div class="ws-head">
+          <img src="assets/logo-hcmue.png" alt="Logo Trường Đại học Sư phạm TP. Hồ Chí Minh" class="ws-logo" />
+          <div class="ws-head-title">
+            <span class="ws-group-tag">Nhóm Natural · KHTN 9</span>
+            <h3>PHIẾU HỌC TẬP</h3>
+            <p>Bài 8: Thấu kính (Hoạt động 2.2)</p>
+          </div>
+        </div>
+        <div class="ws-info">
+          <label>Họ và tên: <input type="text" id="ws-name" placeholder="Nhập họ và tên học sinh" /></label>
+          <label>Lớp: <input type="text" id="ws-class" placeholder="VD: 9A1" /></label>
+        </div>
+
+        <h4>1. Tìm hiểu đường truyền của các tia sáng đặc biệt</h4>
+        <div class="table-wrap">
+          <table class="ws-table">
+            <thead>
+              <tr><th>Tia tới</th><th>Thấu kính hội tụ – Tia ló</th><th>Thấu kính phân kì – Tia ló</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tia sáng đi qua quang tâm O</td>
+                <td><select data-ans="thang" class="ws-q" data-label="TKHT - Tia qua O"></select></td>
+                <td><select data-ans="thang" class="ws-q" data-label="TKPK - Tia qua O"></select></td>
+              </tr>
+              <tr>
+                <td>Tia sáng song song với trục chính</td>
+                <td><select data-ans="quaF2" class="ws-q" data-label="TKHT - Tia // trục chính"></select></td>
+                <td><select data-ans="keoF" class="ws-q" data-label="TKPK - Tia // trục chính"></select></td>
+              </tr>
+              <tr>
+                <td>Tia sáng đi qua tiêu điểm chính<br/><small>(TKPK: tia tới có đường kéo dài qua F')</small></td>
+                <td><select data-ans="songsong" class="ws-q" data-label="TKHT - Tia qua F"></select></td>
+                <td><select data-ans="songsong" class="ws-q" data-label="TKPK - Tia hướng tới F'"></select></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4>2. Vẽ ảnh của vật qua thấu kính hội tụ và thấu kính phân kì</h4>
+        <div class="grid-2 ws-draw-grid">
+          <div class="ws-draw" data-pad="ht">
+            <div class="ws-draw-title">a) Thấu kính hội tụ <small>(f = 10 cm, d = 18 cm)</small></div>
+            <div class="pad-toolbar">
+              <button class="tool active" data-tool="line" title="Thước kẻ">📏 Thước</button>
+              <button class="tool" data-tool="dash" title="Nét đứt">┄ Nét đứt</button>
+              <button class="tool" data-tool="pen" title="Bút tự do">✏️ Bút</button>
+              <span class="colors">
+                <button class="color active" data-color="#d32f2f" style="--c:#d32f2f" title="Đỏ"></button>
+                <button class="color" data-color="#1565c0" style="--c:#1565c0" title="Xanh"></button>
+                <button class="color" data-color="#7b1fa2" style="--c:#7b1fa2" title="Tím"></button>
+                <button class="color" data-color="#111111" style="--c:#111111" title="Đen"></button>
+              </span>
+              <button class="tool" data-act="undo" title="Hoàn tác">↶</button>
+              <button class="tool" data-act="clear" title="Xoá hết">🗑</button>
+              <button class="tool" data-act="answer" title="Xem đáp án">👁 Đáp án</button>
+            </div>
+            <canvas class="cv-pad"></canvas>
+            <div class="img-props">
+              Ảnh A'B' là:
+              <select class="ws-q" data-ans="that" data-opts="thatao" data-label="TKHT - Thật/Ảo"></select>
+              <select class="ws-q" data-ans="nguoc" data-opts="chieu" data-label="TKHT - Chiều"></select>
+              <select class="ws-q" data-ans="lon" data-opts="coanh" data-label="TKHT - Độ lớn"></select>
+            </div>
+          </div>
+          <div class="ws-draw" data-pad="pk">
+            <div class="ws-draw-title">b) Thấu kính phân kì <small>(f = 10 cm, d = 15 cm)</small></div>
+            <div class="pad-toolbar">
+              <button class="tool active" data-tool="line" title="Thước kẻ">📏 Thước</button>
+              <button class="tool" data-tool="dash" title="Nét đứt">┄ Nét đứt</button>
+              <button class="tool" data-tool="pen" title="Bút tự do">✏️ Bút</button>
+              <span class="colors">
+                <button class="color active" data-color="#d32f2f" style="--c:#d32f2f" title="Đỏ"></button>
+                <button class="color" data-color="#1565c0" style="--c:#1565c0" title="Xanh"></button>
+                <button class="color" data-color="#7b1fa2" style="--c:#7b1fa2" title="Tím"></button>
+                <button class="color" data-color="#111111" style="--c:#111111" title="Đen"></button>
+              </span>
+              <button class="tool" data-act="undo" title="Hoàn tác">↶</button>
+              <button class="tool" data-act="clear" title="Xoá hết">🗑</button>
+              <button class="tool" data-act="answer" title="Xem đáp án">👁 Đáp án</button>
+            </div>
+            <canvas class="cv-pad"></canvas>
+            <div class="img-props">
+              Ảnh A'B' là:
+              <select class="ws-q" data-ans="ao" data-opts="thatao" data-label="TKPK - Thật/Ảo"></select>
+              <select class="ws-q" data-ans="cung" data-opts="chieu" data-label="TKPK - Chiều"></select>
+              <select class="ws-q" data-ans="nho" data-opts="coanh" data-label="TKPK - Độ lớn"></select>
+            </div>
+          </div>
+        </div>
+
+        <h4>3. Nhận xét / kết luận của em</h4>
+        <textarea id="ws-note" rows="3" placeholder="Viết kết luận về 3 đường truyền đặc biệt của tia sáng qua thấu kính và cách vẽ ảnh..."></textarea>
+
+        <div class="row-actions no-print ws-actions">
+          <button class="btn btn-accent" id="ws-submit">🚀 Nộp bài cho Giáo viên</button>
+          <button class="btn btn-primary" id="ws-check">✔ Kiểm tra đáp án</button>
+          <button class="btn btn-ghost" id="ws-print">🖨 In / Lưu PDF</button>
+          <button class="btn btn-ghost" id="ws-reset">↺ Làm lại</button>
+          <span class="result" id="ws-result"></span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL NỘP BÀI CỦA HỌC SINH -->
+  <div class="modal-backdrop hidden no-print" id="submit-modal" role="dialog" aria-modal="true">
+    <div class="modal-card submit-modal-card">
+      <button class="modal-close" data-close="submit-modal" aria-label="Đóng">✕</button>
+      <div class="submit-head">
+        <span class="badge">Hoàn thành Phiếu học tập</span>
+        <h3 id="sub-title">🎉 Đã tạo Phiếu học tập của em!</h3>
+        <p class="muted" id="sub-desc">Em hãy tải ảnh phiếu (hoặc dùng nút Chia sẻ trên điện thoại) để gửi cho Giáo viên, hoặc đưa Mã QR kết quả bên dưới cho Giáo viên quét.</p>
+      </div>
+
+      <div class="submit-grid">
+        <div class="submit-preview-col">
+          <div class="submit-img-wrap">
+            <img id="sub-preview-img" alt="Ảnh phiếu học tập đã điền" />
+          </div>
+          <div class="row-actions" style="justify-content:center; margin-top:10px">
+            <button class="btn btn-accent btn-small" id="btn-sub-dl">⬇ Tải ảnh Phiếu (PNG)</button>
+            <button class="btn btn-primary btn-small" id="btn-sub-share">📤 Chia sẻ / Gửi GV</button>
+            <button class="btn btn-ghost btn-small" id="btn-sub-ext-link" style="display:none">↗ Mở trang nộp bài của GV</button>
+          </div>
+        </div>
+
+        <div class="submit-qr-col">
+          <div class="sub-qr-box">
+            <canvas id="cv-qr-result" width="180" height="180"></canvas>
+            <small>Mã QR kết quả bài làm (GV quét để chấm nhanh)</small>
+          </div>
+          <label class="sub-code-label">
+            <span>Mã bài nộp (sao chép gửi GV nếu cần):</span>
+            <div class="qr-input-group">
+              <input type="text" id="sub-code-text" readonly />
+              <button class="btn btn-tiny" id="btn-sub-copy-code" type="button">📋 Chép mã</button>
+            </div>
+          </label>
+          <div class="sub-status" id="sub-webhook-status"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer no-print">
+    <div class="container">© 2026 Nhóm Natural · Trường Đại học Sư phạm TP. Hồ Chí Minh · KHTN 9 – Bài 8: Thấu kính</div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/audio.js"></script>
+  <script src="js/optics.js"></script>
+  <script src="js/qrcode.js"></script>
+  <script src="js/worksheet.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

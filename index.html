@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bài 8: Thấu kính – KHTN 9 | Nhóm Natural</title>
+  <meta name="description" content="Phòng thí nghiệm ảo Bài 8: Thấu kính – Khoa học tự nhiên 9. Mô phỏng đường đi tia sáng đặc biệt và vẽ ảnh qua thấu kính. Nhóm Natural – Trường ĐHSP TP.HCM." />
+  <link rel="icon" href="assets/logo-hcmue.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    // Áp dụng chủ đề sớm để tránh nháy màn hình
+    (function () {
+      var t = localStorage.getItem('natural-theme');
+      if (!t) t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+</head>
+<body>
+  <!-- ===== HEADER ===== -->
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a href="#trang-chu" class="brand">
+        <span class="brand-logo"><img src="assets/logo-hcmue.png" alt="Logo Trường Đại học Sư phạm TP. Hồ Chí Minh" /></span>
+        <span class="brand-divider" aria-hidden="true"></span>
+        <span class="brand-text">
+          <strong>Natural</strong>
+          <small>KHTN 9 · Bài 8: Thấu kính</small>
+        </span>
+      </a>
+
+      <nav class="main-nav" id="main-nav" aria-label="Điều hướng chính">
+        <a href="#trang-chu" class="nav-link active">Trang chủ</a>
+        <a href="#ly-thuyet" class="nav-link">Lý thuyết</a>
+        <a href="#tn1" class="nav-link">TN1: Tia sáng</a>
+        <a href="#tn2" class="nav-link">TN2: Vẽ ảnh</a>
+        <a href="#phieu" class="nav-link">Phiếu học tập</a>
+        <a href="#nhom" class="nav-link">Nhóm</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn" id="btn-sfx" title="Bật/tắt hiệu ứng âm thanh" aria-label="Bật/tắt hiệu ứng âm thanh">
+          <svg class="ic-on" viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg class="ic-off" viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3z"/><path d="M16 9l6 6M22 9l-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button class="icon-btn" id="btn-music" title="Bật/tắt nhạc nền" aria-label="Bật/tắt nhạc nền">
+          <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </button>
+        <button class="icon-btn" id="btn-theme" title="Chuyển chế độ sáng/tối" aria-label="Chuyển chế độ sáng/tối">
+          <svg class="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></g></svg>
+          <svg class="ic-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+        <button class="icon-btn menu-btn" id="btn-menu" aria-label="Mở menu">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="trang-chu">
+      <div class="container hero-inner">
+        <div class="hero-text reveal">
+          <span class="badge">Khoa học tự nhiên 9 · Chủ đề Ánh sáng</span>
+          <h1>Bài 8: <span class="grad">Thấu kính</span></h1>
+          <p class="lead">Phòng thí nghiệm ảo giúp em <b>tự tiến hành thí nghiệm</b> để rút ra đường đi của các tia sáng đặc biệt qua thấu kính hội tụ, thấu kính phân kì và <b>vẽ được ảnh</b> của vật qua thấu kính.</p>
+          <div class="hero-cta">
+            <a href="#tn1" class="btn btn-primary">Bắt đầu thí nghiệm</a>
+            <a href="#ly-thuyet" class="btn btn-ghost">Ôn lý thuyết</a>
+          </div>
+          <ul class="hero-goals">
+            <li><span>🎯</span> Tiến hành thí nghiệm rút ra đường đi của tia qua quang tâm, tia song song trục chính, tia qua tiêu điểm.</li>
+            <li><span>✏️</span> Vẽ được ảnh của vật qua thấu kính hội tụ và thấu kính phân kì.</li>
+          </ul>
+        </div>
+        <div class="hero-art reveal">
+          <svg viewBox="0 0 600 320" class="hero-svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="lensGrad" x1="0" x2="1">
+                <stop offset="0" stop-color="#7cc4ff" stop-opacity=".55"/>
+                <stop offset="1" stop-color="#2f8fe0" stop-opacity=".25"/>
+              </linearGradient>
+              <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <line x1="20" y1="160" x2="580" y2="160" class="h-axis"/>
+            <path d="M300 40 Q350 160 300 280 Q250 160 300 40Z" fill="url(#lensGrad)" class="h-lens"/>
+            <g filter="url(#glow)" class="h-rays">
+              <path d="M30 100 L300 100 L560 220" class="h-ray r1"/>
+              <path d="M30 130 L300 130 L560 190" class="h-ray r2"/>
+              <path d="M30 190 L300 190 L560 130" class="h-ray r3"/>
+              <path d="M30 220 L300 220 L560 100" class="h-ray r4"/>
+            </g>
+            <circle cx="430" cy="160" r="6" class="h-focus"/>
+            <text x="424" y="190" class="h-label">F'</text>
+            <circle cx="170" cy="160" r="6" class="h-focus"/>
+            <text x="164" y="190" class="h-label">F</text>
+            <text x="306" y="182" class="h-label">O</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== LÝ THUYẾT ===== -->
+    <section class="section" id="ly-thuyet">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="kicker">Phần I – II</span>
+          <h2>Cấu tạo, phân loại và các khái niệm của thấu kính</h2>
+          <p>Ôn nhanh kiến thức SGK trước khi bước vào phòng thí nghiệm.</p>
+        </div>
+
+        <div class="card intro-card reveal">
+          <div class="intro-icon">💡</div>
+          <div>
+            <h3>Khởi động</h3>
+            <p>Thấu kính có trong các dụng cụ quen thuộc như <b>ống nhòm, kính lúp, kính hiển vi</b> hay trong <b>chính mắt</b> của chúng ta. Ánh sáng truyền qua thấu kính có thể tạo thành ảnh của các vật như thế nào?</p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card reveal">
+            <h3><span class="num">1</span> Cấu tạo và phân loại</h3>
+            <p><b>Thấu kính</b> là một khối đồng chất trong suốt (thuỷ tinh, nhựa,…) giới hạn bởi hai mặt cong hoặc một mặt cong và một mặt phẳng.</p>
+            <div class="lens-types">
+              <div class="lens-type">
+                <svg viewBox="0 0 80 140"><path d="M40 10 Q70 70 40 130 Q10 70 40 10Z" class="lt-shape"/></svg>
+                <div><b>Thấu kính rìa mỏng</b><br/>(phần rìa mỏng hơn phần giữa)<br/>→ <span class="tag tag-ht">Thấu kính hội tụ</span><br/><small>Chùm sáng song song tới cho chùm tia ló <b>hội tụ</b>.</small></div>
+              </div>
+              <div class="lens-type">
+                <svg viewBox="0 0 80 140"><path d="M20 10 L60 10 Q42 70 60 130 L20 130 Q38 70 20 10Z" class="lt-shape"/></svg>
+                <div><b>Thấu kính rìa dày</b><br/>(phần rìa dày hơn phần giữa)<br/>→ <span class="tag tag-pk">Thấu kính phân kì</span><br/><small>Chùm sáng song song tới cho chùm tia ló <b>phân kì</b>.</small></div>
+              </div>
+            </div>
+            <div class="symbols">
+              <div><svg viewBox="0 0 60 100"><line x1="30" y1="8" x2="30" y2="92" class="sym"/><path d="M20 20 L30 6 L40 20 M20 80 L30 94 L40 80" class="sym"/></svg><span>Kí hiệu TKHT</span></div>
+              <div><svg viewBox="0 0 60 100"><line x1="30" y1="8" x2="30" y2="92" class="sym"/><path d="M20 6 L30 18 L40 6 M20 94 L30 82 L40 94" class="sym"/></svg><span>Kí hiệu TKPK</span></div>
+            </div>
+          </div>
+
+          <div class="card reveal">
+            <h3><span class="num">2</span> Trục chính, quang tâm, tiêu điểm chính, tiêu cự</h3>
+            <ul class="defs">
+              <li><b>Quang tâm O:</b> mọi tia sáng tới O đều truyền thẳng qua thấu kính.</li>
+              <li><b>Trục chính:</b> đường thẳng đi qua quang tâm O và vuông góc với tiết diện thẳng của thấu kính.</li>
+              <li><b>Tiêu điểm chính F:</b> chùm tia tới song song với trục chính của TKHT cho chùm tia ló hội tụ tại một điểm F nằm trên trục chính; với TKPK thì đường kéo dài của chùm tia ló cắt nhau tại F. Mỗi thấu kính có hai tiêu điểm F và F' đối xứng qua O.</li>
+              <li><b>Tiêu cự f:</b> khoảng cách từ quang tâm O đến tiêu điểm chính: <span class="formula">OF = OF' = f</span>.</li>
+            </ul>
+            <div class="mini-canvases">
+              <figure><canvas id="cv-beam-ht" class="cv-mini"></canvas><figcaption>a) Thấu kính hội tụ</figcaption></figure>
+              <figure><canvas id="cv-beam-pk" class="cv-mini"></canvas><figcaption>b) Thấu kính phân kì</figcaption></figure>
+            </div>
+            <button class="btn btn-small btn-ghost" id="btn-beam-replay">↻ Chiếu lại chùm sáng song song</button>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <h3><span class="num">?</span> Thử tài phân loại thấu kính</h3>
+          <p class="muted">Quan sát tiết diện của các thấu kính dưới đây và chọn loại thấu kính tương ứng.</p>
+          <div class="classify" id="classify"></div>
+          <div class="row-actions">
+            <button class="btn btn-primary btn-small" id="btn-classify-check">Kiểm tra</button>
+            <button class="btn btn-ghost btn-small" id="btn-classify-reset">Làm lại</button>
+            <span class="result" id="classify-result"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== THÍ NGHIỆM 1 ===== -->
+    <section class="section section-alt" id="tn1">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="kicker">Hoạt động 2.2 · Thí nghiệm 1</span>
+          <h2>Đường đi của các tia sáng đặc biệt qua thấu kính</h2>
+          <p>Khảo sát đường đi của tia sáng qua thấu kính với các hướng: <b>đi qua quang tâm</b>, <b>song song với trục chính</b>, <b>đi qua tiêu điểm chính</b>. Kéo nguồn sáng <b>S</b> để thay đổi vị trí tia tới.</p>
+        </div>
+
+        <div class="lab reveal">
+          <div class="lab-stage">
+            <canvas id="cv-rays" class="cv-lab"></canvas>
+            <div class="stage-hint">🖱️ Kéo thả nguồn sáng <b>S</b> hoặc nhấp vào vùng bên trái thấu kính</div>
+          </div>
+
+          <aside class="lab-panel">
+            <div class="ctrl">
+              <label class="ctrl-label">Loại thấu kính</label>
+              <div class="seg" data-group="r-type">
+                <button class="seg-btn active" data-val="ht">Hội tụ</button>
+                <button class="seg-btn" data-val="pk">Phân kì</button>
+              </div>
+            </div>
+            <div class="ctrl">
+              <label class="ctrl-label">Chọn tia tới</label>
+              <label class="chip c-o"><input type="checkbox" id="r-ray-o" checked /><span>Tia đi qua quang tâm O</span></label>
+              <label class="chip c-p"><input type="checkbox" id="r-ray-p" /><span>Tia song song với trục chính</span></label>
+              <label class="chip c-f"><input type="checkbox" id="r-ray-f" /><span id="r-ray-f-label">Tia đi qua tiêu điểm chính F</span></label>
+            </div>
+            <div class="ctrl">
+              <label class="ctrl-label">Tiêu cự f = <b id="r-f-val">12</b> cm</label>
+              <input type="range" id="r-f" min="6" max="20" step="1" value="12" />
+            </div>
+            <div class="ctrl">
+              <label class="switch"><input type="checkbox" id="r-ext" checked /><span class="slider"></span> Hiện đường kéo dài (nét đứt)</label>
+            </div>
+            <div class="ctrl row-actions">
+              <button class="btn btn-primary btn-small" id="r-play">▶ Chiếu tia sáng</button>
+              <button class="btn btn-ghost btn-small" id="r-reset">↺ Đặt lại</button>
+            </div>
+          </aside>
+        </div>
+
+        <div class="grid-2">
+          <div class="card reveal">
+            <h3>🔎 Câu hỏi định hướng</h3>
+            <ol class="questions">
+              <li>Khi tia tới đi qua quang tâm O, tia ló có bị đổi hướng không? Điều này có phụ thuộc vào loại thấu kính không?</li>
+              <li>Khi tia tới song song với trục chính, tia ló (hoặc đường kéo dài của tia ló) đi qua điểm đặc biệt nào?</li>
+              <li>Khi tia tới đi qua tiêu điểm chính (hoặc có đường kéo dài hướng tới tiêu điểm), tia ló có đặc điểm gì?</li>
+              <li>Thay đổi tiêu cự f và vị trí nguồn sáng S – các kết luận trên có còn đúng không?</li>
+            </ol>
+          </div>
+          <div class="card reveal">
+            <h3>📌 Kết luận</h3>
+            <p class="muted">Hãy tự rút ra kết luận rồi mới bấm xem để đối chiếu nhé!</p>
+            <button class="btn btn-accent btn-small" id="r-conc-btn">Hiện kết luận</button>
+            <div class="conclusion hidden" id="r-conc"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== THÍ NGHIỆM 2 ===== -->
+    <section class="section" id="tn2">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="kicker">Hoạt động 2.2 · Thí nghiệm 2</span>
+          <h2>Vẽ ảnh của vật qua thấu kính</h2>
+          <p>Vận dụng 3 tia sáng đặc biệt để dựng ảnh A'B' của vật AB. Kéo đỉnh <b>B</b> của vật để thay đổi vị trí và độ cao vật.</p>
+        </div>
+
+        <div class="lab reveal">
+          <div class="lab-stage">
+            <canvas id="cv-image" class="cv-lab"></canvas>
+            <div class="stage-hint">🖱️ Kéo thả đỉnh <b>B</b> của vật sang trái/phải, lên/xuống</div>
+          </div>
+          <aside class="lab-panel">
+            <div class="ctrl">
+              <label class="ctrl-label">Loại thấu kính</label>
+              <div class="seg" data-group="i-type">
+                <button class="seg-btn active" data-val="ht">Hội tụ</button>
+                <button class="seg-btn" data-val="pk">Phân kì</button>
+              </div>
+            </div>
+            <div class="ctrl">
+              <label class="ctrl-label">Tiêu cự f = <b id="i-f-val">10</b> cm</label>
+              <input type="range" id="i-f" min="5" max="18" step="1" value="10" />
+            </div>
+            <div class="ctrl">
+              <label class="ctrl-label">Chiều cao vật h = <b id="i-h-val">5</b> cm</label>
+              <input type="range" id="i-h" min="2" max="10" step="0.5" value="5" />
+            </div>
+            <div class="ctrl">
+              <label class="ctrl-label">Các tia dựng ảnh</label>
+              <label class="chip c-o"><input type="checkbox" id="i-ray-o" checked /><span>Tia qua quang tâm O</span></label>
+              <label class="chip c-p"><input type="checkbox" id="i-ray-p" checked /><span>Tia song song trục chính</span></label>
+              <label class="chip c-f"><input type="checkbox" id="i-ray-f" /><span>Tia qua tiêu điểm</span></label>
+            </div>
+            <div class="ctrl">
+              <label class="switch"><input type="checkbox" id="i-ext" checked /><span class="slider"></span> Hiện đường kéo dài</label>
+            </div>
+            <div class="ctrl preset-wrap" id="i-presets">
+              <label class="ctrl-label">Vị trí vật nhanh</label>
+              <div class="presets">
+                <button class="btn btn-tiny" data-k="2.5">d &gt; 2f</button>
+                <button class="btn btn-tiny" data-k="2">d = 2f</button>
+                <button class="btn btn-tiny" data-k="1.5">f &lt; d &lt; 2f</button>
+                <button class="btn btn-tiny" data-k="1">d = f</button>
+                <button class="btn btn-tiny" data-k="0.5">d &lt; f</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="readout reveal" id="i-readout"></div>
+      </div>
+    </section>
+
+    <!-- ===== PHIẾU HỌC TẬP ===== -->
+    <section class="section section-alt" id="phieu">
+      <div class="container">
+        <div class="section-head reveal no-print">
+          <span class="kicker">Phụ lục · Hoạt động 2.2</span>
+          <h2>Phiếu học tập điện tử &amp; Mã QR cho học sinh</h2>
+          <p>Giáo viên chiếu <b>Mã QR</b> để học sinh quét bằng điện thoại, tự điền phiếu học tập và gửi kết quả/ảnh phiếu nộp lại cho Giáo viên.</p>
+        </div>
+
+        <!-- TRẠM MÃ QR DÀNH CHO GIÁO VIÊN TRÌNH CHIẾU -->
+        <div class="qr-station card reveal no-print" id="qr-station">
+          <div class="qr-left">
+            <div class="qr-frame" id="qr-open-zoom" title="Nhấp để phóng to Mã QR toàn màn hình">
+              <canvas id="cv-qr-main" width="210" height="210"></canvas>
+              <span class="qr-scan-badge">📱 Quét để mở Phiếu học tập</span>
+            </div>
+            <div class="qr-quick-btns">
+              <button class="btn btn-primary btn-small" id="btn-qr-zoom">🔍 Phóng to QR chiếu lớp</button>
+              <button class="btn btn-ghost btn-small" id="btn-qr-dl">⬇ Tải ảnh QR</button>
+            </div>
+          </div>
+
+          <div class="qr-right">
+            <div class="qr-title-row">
+              <span class="badge">Dành cho Giáo viên &amp; Học sinh</span>
+              <a href="phieu-hoc-tap.html" target="_blank" class="btn btn-accent btn-small">↗ Mở trang Phiếu học tập riêng</a>
+            </div>
+            <h3>Mã QR chuyển liên kết tới Phiếu học tập điện tử</h3>
+            <p class="muted">Mặc định mã QR dẫn tới trang <code>phieu-hoc-tap.html</code> tối ưu cho điện thoại. Giáo viên cũng có thể dán bất kỳ đường dẫn nào (link web đã host, Google Form, Padlet, Zalo nhóm…) vào ô dưới đây để tạo mã QR tức thì.</p>
+
+            <div class="qr-fields">
+              <label class="qr-field">
+                <span>🔗 Liên kết khi học sinh quét Mã QR:</span>
+                <div class="qr-input-group">
+                  <input type="url" id="qr-url-input" placeholder="Nhập hoặc dán link Phiếu học tập..." />
+                  <button class="btn btn-tiny" id="btn-qr-copy" type="button">📋 Sao chép</button>
+                  <button class="btn btn-tiny" id="btn-qr-default" type="button">↺ Mặc định</button>
+                </div>
+              </label>
+
+              <label class="qr-field">
+                <span>📥 Link nhận bài nộp của GV <small class="muted">(tuỳ chọn – Google Form / Padlet / Google Sheet Webhook / Zalo nhóm để HS chuyển tới khi bấm Nộp bài)</small>:</span>
+                <div class="qr-input-group">
+                  <input type="url" id="qr-submit-url" placeholder="VD: https://padlet.com/... hoặc link Google Form / Apps Script (để trống nếu nộp bằng ảnh PNG/QR)" />
+                  <button class="btn btn-tiny" id="btn-inbox-open" type="button">📂 Hộp bài nộp (<b id="inbox-count">0</b>)</button>
+                </div>
+              </label>
+            </div>
+
+            <div class="qr-steps">
+              <div><b>Bước 1:</b> GV bấm <i>“Phóng to QR chiếu lớp”</i> trên màn hình.</div>
+              <div><b>Bước 2:</b> HS quét QR, điền câu trả lời &amp; vẽ ảnh trên điện thoại.</div>
+              <div><b>Bước 3:</b> HS bấm <i>“Nộp bài cho GV”</i> để xuất ảnh phiếu PNG / mã QR kết quả gửi GV.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="worksheet card" id="worksheet">
+          <div class="ws-head">
+            <img src="assets/logo-hcmue.png" alt="Logo Trường Đại học Sư phạm TP. Hồ Chí Minh" class="ws-logo" />
+            <div class="ws-head-title">
+              <span class="ws-group-tag">Nhóm Natural · KHTN 9</span>
+              <h3>PHIẾU HỌC TẬP</h3>
+              <p>Bài 8: Thấu kính (Hoạt động 2.2)</p>
+            </div>
+          </div>
+          <div class="ws-info">
+            <label>Họ và tên: <input type="text" id="ws-name" placeholder="Nhập họ và tên học sinh" /></label>
+            <label>Lớp: <input type="text" id="ws-class" placeholder="VD: 9A1" /></label>
+          </div>
+
+          <h4>1. Tìm hiểu đường truyền của các tia sáng đặc biệt</h4>
+          <div class="table-wrap">
+            <table class="ws-table">
+              <thead>
+                <tr><th>Tia tới</th><th>Thấu kính hội tụ – Tia ló</th><th>Thấu kính phân kì – Tia ló</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Tia sáng đi qua quang tâm O</td>
+                  <td><select data-ans="thang" class="ws-q" data-label="TKHT - Tia qua O"></select></td>
+                  <td><select data-ans="thang" class="ws-q" data-label="TKPK - Tia qua O"></select></td>
+                </tr>
+                <tr>
+                  <td>Tia sáng song song với trục chính</td>
+                  <td><select data-ans="quaF2" class="ws-q" data-label="TKHT - Tia // trục chính"></select></td>
+                  <td><select data-ans="keoF" class="ws-q" data-label="TKPK - Tia // trục chính"></select></td>
+                </tr>
+                <tr>
+                  <td>Tia sáng đi qua tiêu điểm chính<br/><small>(TKPK: tia tới có đường kéo dài qua F')</small></td>
+                  <td><select data-ans="songsong" class="ws-q" data-label="TKHT - Tia qua F"></select></td>
+                  <td><select data-ans="songsong" class="ws-q" data-label="TKPK - Tia hướng tới F'"></select></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>2. Vẽ ảnh của vật qua thấu kính hội tụ và thấu kính phân kì</h4>
+          <div class="grid-2 ws-draw-grid">
+            <div class="ws-draw" data-pad="ht">
+              <div class="ws-draw-title">a) Thấu kính hội tụ <small>(f = 10 cm, d = 18 cm)</small></div>
+              <div class="pad-toolbar">
+                <button class="tool active" data-tool="line" title="Thước kẻ">📏 Thước</button>
+                <button class="tool" data-tool="dash" title="Nét đứt">┄ Nét đứt</button>
+                <button class="tool" data-tool="pen" title="Bút tự do">✏️ Bút</button>
+                <span class="colors">
+                  <button class="color active" data-color="#d32f2f" style="--c:#d32f2f" title="Đỏ"></button>
+                  <button class="color" data-color="#1565c0" style="--c:#1565c0" title="Xanh"></button>
+                  <button class="color" data-color="#7b1fa2" style="--c:#7b1fa2" title="Tím"></button>
+                  <button class="color" data-color="#111111" style="--c:#111111" title="Đen"></button>
+                </span>
+                <button class="tool" data-act="undo" title="Hoàn tác">↶</button>
+                <button class="tool" data-act="clear" title="Xoá hết">🗑</button>
+                <button class="tool" data-act="answer" title="Xem đáp án">👁 Đáp án</button>
+              </div>
+              <canvas class="cv-pad"></canvas>
+              <div class="img-props">
+                Ảnh A'B' là:
+                <select class="ws-q" data-ans="that" data-opts="thatao" data-label="TKHT - Thật/Ảo"></select>
+                <select class="ws-q" data-ans="nguoc" data-opts="chieu" data-label="TKHT - Chiều"></select>
+                <select class="ws-q" data-ans="lon" data-opts="coanh" data-label="TKHT - Độ lớn"></select>
+              </div>
+            </div>
+            <div class="ws-draw" data-pad="pk">
+              <div class="ws-draw-title">b) Thấu kính phân kì <small>(f = 10 cm, d = 15 cm)</small></div>
+              <div class="pad-toolbar">
+                <button class="tool active" data-tool="line" title="Thước kẻ">📏 Thước</button>
+                <button class="tool" data-tool="dash" title="Nét đứt">┄ Nét đứt</button>
+                <button class="tool" data-tool="pen" title="Bút tự do">✏️ Bút</button>
+                <span class="colors">
+                  <button class="color active" data-color="#d32f2f" style="--c:#d32f2f" title="Đỏ"></button>
+                  <button class="color" data-color="#1565c0" style="--c:#1565c0" title="Xanh"></button>
+                  <button class="color" data-color="#7b1fa2" style="--c:#7b1fa2" title="Tím"></button>
+                  <button class="color" data-color="#111111" style="--c:#111111" title="Đen"></button>
+                </span>
+                <button class="tool" data-act="undo" title="Hoàn tác">↶</button>
+                <button class="tool" data-act="clear" title="Xoá hết">🗑</button>
+                <button class="tool" data-act="answer" title="Xem đáp án">👁 Đáp án</button>
+              </div>
+              <canvas class="cv-pad"></canvas>
+              <div class="img-props">
+                Ảnh A'B' là:
+                <select class="ws-q" data-ans="ao" data-opts="thatao" data-label="TKPK - Thật/Ảo"></select>
+                <select class="ws-q" data-ans="cung" data-opts="chieu" data-label="TKPK - Chiều"></select>
+                <select class="ws-q" data-ans="nho" data-opts="coanh" data-label="TKPK - Độ lớn"></select>
+              </div>
+            </div>
+          </div>
+
+          <h4>3. Nhận xét / kết luận của em</h4>
+          <textarea id="ws-note" rows="3" placeholder="Viết kết luận về 3 đường truyền đặc biệt của tia sáng qua thấu kính và cách vẽ ảnh..."></textarea>
+
+          <div class="row-actions no-print ws-actions">
+            <button class="btn btn-accent" id="ws-submit">🚀 Nộp bài cho Giáo viên</button>
+            <button class="btn btn-primary" id="ws-check">✔ Kiểm tra đáp án</button>
+            <button class="btn btn-ghost" id="ws-print">🖨 In / Lưu PDF</button>
+            <button class="btn btn-ghost" id="ws-reset">↺ Làm lại</button>
+            <span class="result" id="ws-result"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== NHÓM ===== -->
+    <section class="section" id="nhom">
+      <div class="container">
+        <div class="team card reveal">
+          <div class="team-header">
+            <img src="assets/logo-hcmue.png" alt="Logo Trường Đại học Sư phạm TP. Hồ Chí Minh" class="team-logo" />
+            <div class="team-info">
+              <div class="team-badges">
+                <span class="kicker">Thực hiện bởi</span>
+                <span class="approved-pill">✓ Đã duyệt · 4 thành viên</span>
+              </div>
+              <h2>Nhóm Natural</h2>
+              <p class="muted">Sản phẩm học liệu số hỗ trợ dạy học KHTN 9 – Bài 8: Thấu kính (Hoạt động 2.2: Tìm hiểu đường đi của tia sáng qua các loại thấu kính).</p>
+            </div>
+          </div>
+
+          <div class="member-table-wrap">
+            <table class="member-table">
+              <thead>
+                <tr>
+                  <th>Thành viên</th>
+                  <th>Mã SV</th>
+                  <th>Vai trò</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="m-name">Nguyễn Thị Ý Như</div>
+                    <a href="mailto:5001401145@student.hcmue.edu.vn" class="m-mail">5001401145@student.hcmue.edu.vn</a>
+                  </td>
+                  <td class="m-id">50.01.401.145</td>
+                  <td><span class="role-badge leader">Nhóm trưởng</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="m-name">Đỗ Văn Nhật Minh</div>
+                    <a href="mailto:5001401114@student.hcmue.edu.vn" class="m-mail">5001401114@student.hcmue.edu.vn</a>
+                  </td>
+                  <td class="m-id">50.01.401.114</td>
+                  <td><span class="role-badge">Thành viên</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="m-name">Nguyễn Huyền Trang</div>
+                    <a href="mailto:5001401228@student.hcmue.edu.vn" class="m-mail">5001401228@student.hcmue.edu.vn</a>
+                  </td>
+                  <td class="m-id">50.01.401.228</td>
+                  <td><span class="role-badge">Thành viên</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="m-name">Nguyễn Khánh Linh</div>
+                    <a href="mailto:5001401099@student.hcmue.edu.vn" class="m-mail">5001401099@student.hcmue.edu.vn</a>
+                  </td>
+                  <td class="m-id">50.01.401.099</td>
+                  <td><span class="role-badge">Thành viên</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL PHÓNG TO MÃ QR TRÌNH CHIẾU -->
+  <div class="modal-backdrop hidden no-print" id="qr-modal" role="dialog" aria-modal="true">
+    <div class="modal-card qr-modal-card">
+      <button class="modal-close" data-close="qr-modal" aria-label="Đóng">✕</button>
+      <img src="assets/logo-hcmue.png" alt="Logo ĐHSP TP.HCM" class="modal-logo" />
+      <span class="badge">Nhóm Natural · KHTN 9 – Bài 8: Thấu kính</span>
+      <h3>QUÉT MÃ QR ĐỂ MỞ PHIẾU HỌC TẬP ĐIỆN TỬ</h3>
+      <div class="qr-zoom-box">
+        <canvas id="cv-qr-zoom" width="360" height="360"></canvas>
+      </div>
+      <p class="qr-zoom-url" id="qr-zoom-url-text"></p>
+      <div class="row-actions" style="justify-content:center">
+        <button class="btn btn-primary btn-small" id="btn-qr-zoom-dl">⬇ Tải ảnh Mã QR (PNG)</button>
+        <button class="btn btn-ghost btn-small" data-close="qr-modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL NỘP BÀI CỦA HỌC SINH -->
+  <div class="modal-backdrop hidden no-print" id="submit-modal" role="dialog" aria-modal="true">
+    <div class="modal-card submit-modal-card">
+      <button class="modal-close" data-close="submit-modal" aria-label="Đóng">✕</button>
+      <div class="submit-head">
+        <span class="badge">Hoàn thành Phiếu học tập</span>
+        <h3 id="sub-title">🎉 Đã tạo Phiếu học tập của em!</h3>
+        <p class="muted" id="sub-desc">Em hãy tải ảnh phiếu (hoặc dùng nút Chia sẻ trên điện thoại) để gửi cho Giáo viên, hoặc đưa Mã QR kết quả bên dưới cho Giáo viên quét.</p>
+      </div>
+
+      <div class="submit-grid">
+        <div class="submit-preview-col">
+          <div class="submit-img-wrap">
+            <img id="sub-preview-img" alt="Ảnh phiếu học tập đã điền" />
+          </div>
+          <div class="row-actions" style="justify-content:center; margin-top:10px">
+            <button class="btn btn-accent btn-small" id="btn-sub-dl">⬇ Tải ảnh Phiếu (PNG)</button>
+            <button class="btn btn-primary btn-small" id="btn-sub-share">📤 Chia sẻ / Gửi GV</button>
+            <button class="btn btn-ghost btn-small" id="btn-sub-ext-link" style="display:none">↗ Mở trang nộp bài của GV</button>
+          </div>
+        </div>
+
+        <div class="submit-qr-col">
+          <div class="sub-qr-box">
+            <canvas id="cv-qr-result" width="180" height="180"></canvas>
+            <small>Mã QR kết quả bài làm (GV quét để chấm nhanh)</small>
+          </div>
+          <label class="sub-code-label">
+            <span>Mã bài nộp (sao chép gửi GV nếu cần):</span>
+            <div class="qr-input-group">
+              <input type="text" id="sub-code-text" readonly />
+              <button class="btn btn-tiny" id="btn-sub-copy-code" type="button">📋 Chép mã</button>
+            </div>
+          </label>
+          <div class="sub-status" id="sub-webhook-status"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL HỘP BÀI NỘP CỦA GIÁO VIÊN -->
+  <div class="modal-backdrop hidden no-print" id="inbox-modal" role="dialog" aria-modal="true">
+    <div class="modal-card inbox-modal-card">
+      <button class="modal-close" data-close="inbox-modal" aria-label="Đóng">✕</button>
+      <span class="badge">Dành cho Giáo viên</span>
+      <h3>📂 Hộp bài nộp &amp; Giải mã kết quả Học sinh</h3>
+      <p class="muted">Danh sách các phiếu đã nộp trên thiết bị này hoặc dán <b>Mã bài nộp</b> của học sinh để xem chi tiết kết quả.</p>
+      <div class="qr-input-group" style="margin: 10px 0 14px">
+        <input type="text" id="inbox-import-input" placeholder="Dán Mã bài nộp hoặc link kết quả của học sinh vào đây..." />
+        <button class="btn btn-primary btn-small" id="btn-inbox-import">➕ Nhập bài</button>
+        <button class="btn btn-ghost btn-small" id="btn-inbox-clear">🗑 Xoá danh sách</button>
+      </div>
+      <div class="inbox-list" id="inbox-list"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">© 2026 Nhóm Natural · Trường Đại học Sư phạm TP. Hồ Chí Minh · KHTN 9 – Bài 8: Thấu kính</div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/audio.js"></script>
+  <script src="js/optics.js"></script>
+  <script src="js/qrcode.js"></script>
+  <script src="js/theory.js"></script>
+  <script src="js/lab-rays.js"></script>
+  <script src="js/lab-image.js"></script>
+  <script src="js/worksheet.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
