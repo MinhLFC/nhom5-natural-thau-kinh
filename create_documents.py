@@ -1,5 +1,9 @@
 import os
+import sys
 import subprocess
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -201,9 +205,42 @@ def build_docx():
     add_bullet("Rút ra được quy luật hội tụ của chùm tia ló đối với thấu kính hội tụ và tính chất phân kì của chùm tia ló đối với thấu kính phân kì.")
 
     add_h2("1.2. Dụng cụ, thiết bị và các bước tiến hành.")
-    add_h3("1.2.1. Dụng cụ, thiết bị.")
-    add_bullet("Máy tính để bàn, máy tính xách tay hoặc điện thoại thông minh có kết nối Internet.")
-    add_bullet("Trình duyệt web (Google Chrome, Microsoft Edge, Safari...) truy cập vào phần mềm mô phỏng Thấu kính của Nhóm Natural.")
+    add_h3("1.2.1. Dụng cụ, thiết bị và giải thích về công cụ hỗ trợ.")
+    add_bullet("Máy tính để bàn, máy tính xách tay hoặc điện thoại thông minh có kết nối Internet.", "- Thiết bị phần cứng: ")
+    add_bullet("Phần mềm mô phỏng Thấu kính trực tuyến (Nhóm Natural - KHTN 9, Trường ĐHSP TP.HCM).", "- Phần mềm mô phỏng: ")
+    
+    p_gc1 = doc.add_paragraph()
+    p_gc1.paragraph_format.space_before = Pt(4)
+    p_gc1.paragraph_format.space_after = Pt(2)
+    r_gc1 = p_gc1.add_run("★ Phân tích điểm khó của nội dung kiến thức trong bài học:")
+    r_gc1.bold = True
+    r_gc1.font.color.rgb = RGBColor(0x0d, 0x4a, 0x7a)
+
+    add_bullet("Trong thực tế phòng thí nghiệm phổ thông, đường truyền của các tia sáng trong không khí rất mờ nhạt, tán xạ yếu và cực kì khó quan sát nếu phòng học không đủ tối. Việc bố trí nguồn sáng, căn chỉnh góc nghiêng và lắp đặt khe hẹp để tạo chùm tia laser/halogen phẳng mất rất nhiều thời gian tiết học.", "• ", 0.3)
+    add_bullet("Đặc biệt đối với thấu kính phân kì, khái niệm \"tiêu điểm ảo F\" và \"đường kéo dài của tia ló\" là một rào cản nhận thức rất lớn đối với học sinh lớp 9. Trong thí nghiệm thật, mắt học sinh không thể nhìn thấy đường kéo dài nét đứt cắt nhau tại tiêu điểm ở phía trước thấu kính, dẫn đến việc các em phải học vẹt định nghĩa trừu tượng mà không hiểu được bản chất hiện tượng vật lí.", "• ", 0.3)
+
+    p_gc2 = doc.add_paragraph()
+    p_gc2.paragraph_format.space_before = Pt(4)
+    p_gc2.paragraph_format.space_after = Pt(2)
+    r_gc2 = p_gc2.add_run("★ Vai trò và lý do lựa chọn công cụ mô phỏng tương tác (Khắc phục hạn chế của video/thí nghiệm thường):")
+    r_gc2.bold = True
+    r_gc2.font.color.rgb = RGBColor(0x0d, 0x4a, 0x7a)
+
+    add_bullet("Mô phỏng tương tác không đơn thuần chỉ để minh họa tĩnh hay thay thế bằng một đoạn video xem thụ động: Học sinh được trực tiếp cầm nắm, kéo rê nguồn sáng S đến bất kì toạ độ nào trong không gian, lập tức nhận thấy đường truyền tia sáng và tia ló biến đổi tương ứng theo thời gian thực (real-time visual feedback).", "• ", 0.3)
+    add_bullet("Trực quan hóa \"cái vô hình\": Công cụ mô phỏng cho phép hiển thị các đường kéo dài tia sáng bằng nét đứt sắc nét, giúp học sinh tận mắt chứng kiến giao điểm ảo của chùm tia phân kì tại tiêu điểm F, giải quyết triệt để điểm nghẽn nhận thức của bài học.", "• ", 0.3)
+
+    p_gc3 = doc.add_paragraph()
+    p_gc3.paragraph_format.space_before = Pt(4)
+    p_gc3.paragraph_format.space_after = Pt(2)
+    r_gc3 = p_gc3.add_run("★ Giải thích chi tiết các công cụ hỗ trợ trên giao diện mô phỏng thí nghiệm 1:")
+    r_gc3.bold = True
+    r_gc3.font.color.rgb = RGBColor(0x0d, 0x4a, 0x7a)
+
+    add_bullet("Hiệu ứng âm thanh đa giác quan (Web Audio API): Tích hợp phản hồi âm thanh chuẩn mực khi bật/tắt tia sáng, âm thanh chuyển động của tia sáng và âm thanh chúc mừng khi hoàn thành, tạo môi trường học tập sống động, kích thích sự tập trung và hứng thú của học sinh.", "• ", 0.3)
+    add_bullet("Chế độ hiển thị Sáng / Tối (Light / Dark mode): Nút chuyển đổi linh hoạt chế độ sáng (phù hợp khi giáo viên trình chiếu trên máy chiếu lớp học) và chế độ tối quang học (tạo cảm giác như đang ở trong phòng thí nghiệm quang học chuyên nghiệp, chống mỏi mắt khi học sinh tự học trên điện thoại cá nhân).", "• ", 0.3)
+    add_bullet("Nút \"▶ Chiếu tia sáng\" (Play Animation): Tạo hoạt họa chùm photon chuyển động từ nguồn phát tới thấu kính rồi mới khúc xạ thành tia ló. Công cụ này giúp học sinh nhận thức sâu sắc quan hệ nhân quả vật lí: có tia tới đến thấu kính trước, sau đó mới sinh ra tia ló sau thấu kính.", "• ", 0.3)
+    add_bullet("Nút \"Hiện kết luận\" (Đối chiếu sư phạm): Ban đầu kết luận được ẩn đi để học sinh tự thảo luận và rút ra quy tắc; chỉ khi học sinh đã nêu ý kiến thì giáo viên mới mở nút này để cả lớp cùng đối chiếu, khắc phục lỗi tiếp nhận thụ động.", "• ", 0.3)
+    add_bullet("Áp dụng chu trình POE (Dự đoán - Quan sát - Giải thích): Nhằm tránh lỗi \"Hỏi sau khi đã thấy kết quả\", trước khi bật từng tia sáng trên mô phỏng, giáo viên luôn yêu cầu học sinh làm bước Dự đoán (P) xem tia ló sẽ đi đâu, sau đó mới bấm chọn tia trên mô phỏng để Quan sát (O) và Giải thích (E).", "• ", 0.3)
 
     add_h3("1.2.2. Các bước tiến hành.")
     add_step("Bước 1: Truy cập trang web mô phỏng và mở tab \"TN1: Tia sáng\"")
@@ -262,9 +299,41 @@ def build_docx():
     add_bullet("Khảo sát, xác định và ghi nhận được đặc điểm của ảnh A'B' (ảnh thật hay ảnh ảo, cùng chiều hay ngược chiều với vật, lớn hơn hay nhỏ hơn vật) ứng với các khoảng cách khác nhau từ vật đến thấu kính (d > 2f, d = 2f, f < d < 2f, d = f, d < f).")
 
     add_h2("2.2. Dụng cụ, thiết bị và các bước tiến hành.")
-    add_h3("2.2.1. Dụng cụ, thiết bị.")
-    add_bullet("Máy tính hoặc điện thoại có kết nối Internet.")
-    add_bullet("Phần mềm mô phỏng Thấu kính trực tuyến (Nhóm Natural - KHTN 9).")
+    add_h3("2.2.1. Dụng cụ, thiết bị và giải thích về công cụ hỗ trợ.")
+    add_bullet("Máy tính hoặc điện thoại có kết nối Internet.", "- Thiết bị phần cứng: ")
+    add_bullet("Phần mềm mô phỏng Thấu kính trực tuyến (Nhóm Natural - KHTN 9, Trường ĐHSP TP.HCM).", "- Phần mềm mô phỏng: ")
+
+    p_gc4 = doc.add_paragraph()
+    p_gc4.paragraph_format.space_before = Pt(4)
+    p_gc4.paragraph_format.space_after = Pt(2)
+    r_gc4 = p_gc4.add_run("★ Phân tích điểm khó của nội dung kiến thức trong bài học:")
+    r_gc4.bold = True
+    r_gc4.font.color.rgb = RGBColor(0x0d, 0x4a, 0x7a)
+
+    add_bullet("Khảo sát sự tạo ảnh của thấu kính (đặc biệt là mối liên hệ phụ thuộc giữa vị trí vật d và tính chất ảnh d', h') đòi hỏi sự thay đổi liên tục của vật trên trục chính. Trong thí nghiệm thật, việc dịch chuyển nến/đèn, dịch chuyển thấu kính và màn hứng trên giá quang học rất lề mề, dễ làm lệch trục quang học, ảnh trên màn bị mờ hoặc nhòe khiến học sinh khó xác định ranh giới ảnh rõ nét nhất.", "• ", 0.3)
+    add_bullet("Vấn đề nan giải về ẢNH ẢO: Đối với thấu kính phân kì và trường hợp d < f của thấu kính hội tụ, ảnh tạo bởi thấu kính là ảnh ảo. Ảnh ảo hoàn toàn không hứng được trên màn chắn. Trong giờ học thực tế, học sinh nhìn qua thấu kính chỉ thấy ảnh lơ lửng, không thể đo được khoảng cách d' hay chiều cao h', không xác định được ảnh ảo nằm trước hay sau thấu kính. Đây là một điểm nghẽn nhận thức lớn nhất của học sinh THCS.", "• ", 0.3)
+
+    p_gc5 = doc.add_paragraph()
+    p_gc5.paragraph_format.space_before = Pt(4)
+    p_gc5.paragraph_format.space_after = Pt(2)
+    r_gc5 = p_gc5.add_run("★ Vai trò và lý do lựa chọn công cụ mô phỏng tương tác (Khắc phục hạn chế của video/thí nghiệm thường):")
+    r_gc5.bold = True
+    r_gc5.font.color.rgb = RGBColor(0x0d, 0x4a, 0x7a)
+
+    add_bullet("Vượt trội hoàn toàn so với video thụ động: Thay vì ngồi xem giáo viên thao tác mẫu, từng học sinh được tự do kéo thả đỉnh B của vật sáng AB sang trái/phải, lên/xuống liên tục; ảnh A'B' di chuyển và biến đổi tương ứng theo thời gian thực. Mối quan hệ giữa vật và ảnh trở thành một quy luật liên tục, trực quan thay vì các trường hợp rời rạc học vẹt.", "• ", 0.3)
+    add_bullet("Giải quyết trọn vẹn khái niệm ảnh ảo: Mô phỏng hiển thị đồng thời cả vật thật, ảnh thật (nét liền màu cam), ảnh ảo (nét đứt màu cam) cùng với các đường kéo dài của tia ló, giúp học sinh thấy rõ bản chất tạo ảnh ảo là do đường kéo dài của chùm tia ló cắt nhau.", "• ", 0.3)
+
+    p_gc6 = doc.add_paragraph()
+    p_gc6.paragraph_format.space_before = Pt(4)
+    p_gc6.paragraph_format.space_after = Pt(2)
+    r_gc6 = p_gc6.add_run("★ Giải thích chi tiết các công cụ hỗ trợ trên giao diện mô phỏng thí nghiệm 2:")
+    r_gc6.bold = True
+    r_gc6.font.color.rgb = RGBColor(0x0d, 0x4a, 0x7a)
+
+    add_bullet("Thước đo quang học và hệ toạ độ tự động: Trục chính được chia vạch cm rõ ràng, tự động đánh dấu quang tâm O, các tiêu điểm F, F', các vị trí đặc biệt 2F, 2F' giúp học sinh định lượng chính xác khoảng cách.", "• ", 0.3)
+    add_bullet("Các nút chọn nhanh vị trí chuẩn trong SGK (d > 2f, d = 2f, f < d < 2f, d = f, d < f): Giúp giáo viên và học sinh chuyển đổi ngay lập tức đến các vị trí trọng tâm của chương trình để khảo sát mà không mất thời gian căn chỉnh thủ công.", "• ", 0.3)
+    add_bullet("Bảng đo đạc & tính chất ảnh tức thời (Readout Card): Đóng vai trò như một \"trợ lí số thông minh\", tự động tính toán khoảng cách ảnh d', chiều cao ảnh h', độ phóng đại k, đồng thời hiển thị huy hiệu phân loại ảnh (Ảnh thật / Ảnh ảo, Cùng chiều / Ngược chiều, Lớn hơn / Nhỏ hơn / Bằng vật) với màu sắc nổi bật, giúp học sinh tức thời đối chiếu và củng cố kết quả vẽ ảnh.", "• ", 0.3)
+    add_bullet("Áp dụng chu trình POE (Dự đoán - Quan sát - Giải thích): Trước khi nhấp nút vị trí nhanh hoặc kéo vật, giáo viên yêu cầu học sinh ghi nhận dự đoán về đặc điểm ảnh (thật/ảo, chiều, độ lớn), sau đó mới quan sát ảnh trên mô phỏng và giải thích nguyên nhân.", "• ", 0.3)
 
     add_h3("2.2.2. Các bước tiến hành.")
     add_step("Bước 1: Truy cập trang web mô phỏng và mở tab \"TN2: Vẽ ảnh\"")
@@ -373,8 +442,13 @@ def build_docx():
                                   left={'val': 'single', 'sz': 4, 'color': 'cbd5e1'},
                                   right={'val': 'single', 'sz': 4, 'color': 'cbd5e1'})
 
-    doc.save(DOCX_OUT)
-    print(f"DOCX created: {DOCX_OUT}")
+    try:
+        doc.save(DOCX_OUT)
+        print(f"DOCX created: {DOCX_OUT}")
+    except PermissionError:
+        alt_docx = os.path.join(BASE_DIR, 'Huong-Dan-Mo-Phong-Thi-Nghiem-Thau-Kinh-Natural-MoiNhat.docx')
+        doc.save(alt_docx)
+        print(f"File chính đang mở trong Word, đã lưu bản mới nhất tại: {alt_docx}")
 
 def build_html_for_pdf():
     # Build a clean, styled HTML version that Edge can print directly to PDF
@@ -590,10 +664,31 @@ def build_html_for_pdf():
   </ul>
 
   <h2>1.2. Dụng cụ, thiết bị và các bước tiến hành.</h2>
-  <h3>1.2.1. Dụng cụ, thiết bị.</h3>
+  <h3>1.2.1. Dụng cụ, thiết bị và giải thích về công cụ hỗ trợ.</h3>
   <ul>
-    <li>Máy tính để bàn, máy tính xách tay hoặc điện thoại thông minh có kết nối Internet.</li>
-    <li>Trình duyệt web hiện đại truy cập vào phần mềm mô phỏng Thấu kính của Nhóm Natural.</li>
+    <li><b>Thiết bị phần cứng:</b> Máy tính để bàn, máy tính xách tay hoặc điện thoại thông minh có kết nối Internet.</li>
+    <li><b>Phần mềm mô phỏng:</b> Phần mềm mô phỏng Thấu kính trực tuyến (Nhóm Natural - KHTN 9, Trường ĐHSP TP.HCM).</li>
+  </ul>
+
+  <p><b>★ Phân tích điểm khó của nội dung kiến thức trong bài học:</b></p>
+  <ul>
+    <li>Trong thực tế phòng thí nghiệm phổ thông, đường truyền của các tia sáng trong không khí rất mờ nhạt, tán xạ yếu và cực kì khó quan sát nếu phòng học không đủ tối. Việc bố trí nguồn sáng, căn chỉnh góc nghiêng và lắp đặt khe hẹp để tạo chùm tia laser/halogen phẳng mất rất nhiều thời gian tiết học.</li>
+    <li>Đặc biệt đối với thấu kính phân kì, khái niệm <i>"tiêu điểm ảo F"</i> và <i>"đường kéo dài của tia ló"</i> là một rào cản nhận thức rất lớn đối với học sinh lớp 9. Trong thí nghiệm thật, mắt học sinh không thể nhìn thấy đường kéo dài nét đứt cắt nhau tại tiêu điểm ở phía trước thấu kính, dẫn đến việc các em phải học vẹt định nghĩa trừu tượng mà không hiểu được bản chất hiện tượng vật lí.</li>
+  </ul>
+
+  <p><b>★ Vai trò và lý do lựa chọn công cụ mô phỏng tương tác (Khắc phục hạn chế của video/thí nghiệm thường):</b></p>
+  <ul>
+    <li>Mô phỏng tương tác không đơn thuần chỉ để minh họa tĩnh hay thay thế bằng một đoạn video xem thụ động: Học sinh được trực tiếp cầm nắm, kéo rê nguồn sáng S đến bất kì toạ độ nào trong không gian, lập tức nhận thấy đường truyền tia sáng và tia ló biến đổi tương ứng theo thời gian thực (real-time visual feedback).</li>
+    <li>Trực quan hóa "cái vô hình": Công cụ mô phỏng cho phép hiển thị các đường kéo dài tia sáng bằng nét đứt sắc nét, giúp học sinh tận mắt chứng kiến giao điểm ảo của chùm tia phân kì tại tiêu điểm F, giải quyết triệt để điểm nghẽn nhận thức của bài học.</li>
+  </ul>
+
+  <p><b>★ Giải thích chi tiết các công cụ hỗ trợ trên giao diện mô phỏng thí nghiệm 1:</b></p>
+  <ul>
+    <li><b>Hiệu ứng âm thanh đa giác quan (Web Audio API):</b> Tích hợp phản hồi âm thanh chuẩn mực khi bật/tắt tia sáng, âm thanh chuyển động của tia sáng và âm thanh chúc mừng khi hoàn thành, tạo môi trường học tập sống động, kích thích sự tập trung và hứng thú của học sinh.</li>
+    <li><b>Chế độ hiển thị Sáng / Tối (Light / Dark mode):</b> Nút chuyển đổi linh hoạt chế độ sáng (phù hợp khi giáo viên trình chiếu trên máy chiếu lớp học) và chế độ tối quang học (tạo cảm giác như đang ở trong phòng thí nghiệm quang học chuyên nghiệp, chống mỏi mắt khi học sinh tự học trên điện thoại cá nhân).</li>
+    <li><b>Nút "▶ Chiếu tia sáng" (Play Animation):</b> Tạo hoạt họa chùm photon chuyển động từ nguồn phát tới thấu kính rồi mới khúc xạ thành tia ló. Công cụ này giúp học sinh nhận thức sâu sắc quan hệ nhân quả vật lí: có tia tới đến thấu kính trước, sau đó mới sinh ra tia ló sau thấu kính.</li>
+    <li><b>Nút "Hiện kết luận" (Đối chiếu sư phạm):</b> Ban đầu kết luận được ẩn đi để học sinh tự thảo luận và rút ra quy tắc; chỉ khi học sinh đã nêu ý kiến thì giáo viên mới mở nút này để cả lớp cùng đối chiếu, khắc phục lỗi tiếp nhận thụ động.</li>
+    <li><b>Áp dụng chu trình POE (Dự đoán - Quan sát - Giải thích):</b> Nhằm tránh lỗi <i>"Hỏi sau khi đã thấy kết quả"</i>, trước khi bật từng tia sáng trên mô phỏng, giáo viên luôn yêu cầu học sinh làm bước Dự đoán (P) xem tia ló sẽ đi đâu, sau đó mới bấm chọn tia trên mô phỏng để Quan sát (O) và Giải thích (E).</li>
   </ul>
 
   <h3>1.2.2. Các bước tiến hành.</h3>
@@ -703,10 +798,30 @@ def build_html_for_pdf():
   </ul>
 
   <h2>2.2. Dụng cụ, thiết bị và các bước tiến hành.</h2>
-  <h3>2.2.1. Dụng cụ, thiết bị.</h3>
+  <h3>2.2.1. Dụng cụ, thiết bị và giải thích về công cụ hỗ trợ.</h3>
   <ul>
-    <li>Máy tính để bàn, máy tính xách tay hoặc điện thoại có kết nối Internet.</li>
-    <li>Phần mềm mô phỏng Thấu kính trực tuyến (Nhóm Natural - KHTN 9).</li>
+    <li><b>Thiết bị phần cứng:</b> Máy tính để bàn, máy tính xách tay hoặc điện thoại có kết nối Internet.</li>
+    <li><b>Phần mềm mô phỏng:</b> Phần mềm mô phỏng Thấu kính trực tuyến (Nhóm Natural - KHTN 9, Trường ĐHSP TP.HCM).</li>
+  </ul>
+
+  <p><b>★ Phân tích điểm khó của nội dung kiến thức trong bài học:</b></p>
+  <ul>
+    <li>Khảo sát sự tạo ảnh của thấu kính (đặc biệt là mối liên hệ phụ thuộc giữa vị trí vật d và tính chất ảnh d', h') đòi hỏi sự thay đổi liên tục của vật trên trục chính. Trong thí nghiệm thật, việc dịch chuyển nến/đèn, dịch chuyển thấu kính và màn hứng trên giá quang học rất lề mề, dễ làm lệch trục quang học, ảnh trên màn bị mờ hoặc nhòe khiến học sinh khó xác định ranh giới ảnh rõ nét nhất.</li>
+    <li><b>Vấn đề nan giải về ẢNH ẢO:</b> Đối với thấu kính phân kì và trường hợp d &lt; f của thấu kính hội tụ, ảnh tạo bởi thấu kính là ảnh ảo. Ảnh ảo hoàn toàn không hứng được trên màn chắn. Trong giờ học thực tế, học sinh nhìn qua thấu kính chỉ thấy ảnh lơ lửng, không thể đo được khoảng cách d' hay chiều cao h', không xác định được ảnh ảo nằm trước hay sau thấu kính. Đây là một điểm nghẽn nhận thức lớn nhất của học sinh THCS.</li>
+  </ul>
+
+  <p><b>★ Vai trò và lý do lựa chọn công cụ mô phỏng tương tác (Khắc phục hạn chế của video/thí nghiệm thường):</b></p>
+  <ul>
+    <li><b>Vượt trội hoàn toàn so với video thụ động:</b> Thay vì ngồi xem giáo viên thao tác mẫu, từng học sinh được tự do kéo thả đỉnh B của vật sáng AB sang trái/phải, lên/xuống liên tục; ảnh A'B' di chuyển và biến đổi tương ứng theo thời gian thực. Mối quan hệ giữa vật và ảnh trở thành một quy luật liên tục, trực quan thay vì các trường hợp rời rạc học vẹt.</li>
+    <li><b>Giải quyết trọn vẹn khái niệm ảnh ảo:</b> Mô phỏng hiển thị đồng thời cả vật thật, ảnh thật (nét liền màu cam), ảnh ảo (nét đứt màu cam) cùng với các đường kéo dài của tia ló, giúp học sinh thấy rõ bản chất tạo ảnh ảo là do đường kéo dài của chùm tia ló cắt nhau.</li>
+  </ul>
+
+  <p><b>★ Giải thích chi tiết các công cụ hỗ trợ trên giao diện mô phỏng thí nghiệm 2:</b></p>
+  <ul>
+    <li><b>Thước đo quang học và hệ toạ độ tự động:</b> Trục chính được chia vạch cm rõ ràng, tự động đánh dấu quang tâm O, các tiêu điểm F, F', các vị trí đặc biệt 2F, 2F' giúp học sinh định lượng chính xác khoảng cách.</li>
+    <li><b>Các nút chọn nhanh vị trí chuẩn trong SGK (d &gt; 2f, d = 2f, f &lt; d &lt; 2f, d = f, d &lt; f):</b> Giúp giáo viên và học sinh chuyển đổi ngay lập tức đến các vị trí trọng tâm của chương trình để khảo sát mà không mất thời gian căn chỉnh thủ công.</li>
+    <li><b>Bảng đo đạc & tính chất ảnh tức thời (Readout Card):</b> Đóng vai trò như một <i>"trợ lí số thông minh"</i>, tự động tính toán khoảng cách ảnh d', chiều cao ảnh h', độ phóng đại k, đồng thời hiển thị huy hiệu phân loại ảnh (Ảnh thật / Ảnh ảo, Cùng chiều / Ngược chiều, Lớn hơn / Nhỏ hơn / Bằng vật) với màu sắc nổi bật, giúp học sinh tức thời đối chiếu và củng cố kết quả vẽ ảnh.</li>
+    <li><b>Áp dụng chu trình POE (Dự đoán - Quan sát - Giải thích):</b> Trước khi nhấp nút vị trí nhanh hoặc kéo vật, giáo viên yêu cầu học sinh ghi nhận dự đoán về đặc điểm ảnh (thật/ảo, chiều, độ lớn), sau đó mới quan sát ảnh trên mô phỏng và giải thích nguyên nhân.</li>
   </ul>
 
   <h3>2.2.2. Các bước tiến hành.</h3>
@@ -856,15 +971,27 @@ def build_html_for_pdf():
 
 def convert_html_to_pdf():
     # Use Edge headless to print the HTML to high-resolution vector PDF
-    cmd = [
-        EDGE_PATH,
-        "--headless=new",
-        f"--print-to-pdf={PDF_OUT}",
-        "--no-pdf-header-footer",
-        HTML_OUT
-    ]
-    subprocess.run(cmd, check=True)
-    print(f"PDF created via Edge: {PDF_OUT}")
+    try:
+        cmd = [
+            EDGE_PATH,
+            "--headless=new",
+            f"--print-to-pdf={PDF_OUT}",
+            "--no-pdf-header-footer",
+            HTML_OUT
+        ]
+        subprocess.run(cmd, check=True)
+        print(f"PDF created via Edge: {PDF_OUT}")
+    except Exception as e:
+        alt_pdf = os.path.join(BASE_DIR, 'Huong-Dan-Mo-Phong-Thi-Nghiem-Thau-Kinh-Natural-MoiNhat.pdf')
+        cmd = [
+            EDGE_PATH,
+            "--headless=new",
+            f"--print-to-pdf={alt_pdf}",
+            "--no-pdf-header-footer",
+            HTML_OUT
+        ]
+        subprocess.run(cmd, check=True)
+        print(f"PDF created via Edge: {alt_pdf}")
 
 if __name__ == '__main__':
     build_docx()
