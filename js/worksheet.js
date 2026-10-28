@@ -15,7 +15,8 @@
     ['', '— Chọn đường truyền tia ló —'],
     ['thang', 'Tiếp tục truyền thẳng, không đổi hướng'],
     ['quaF2', "Tia ló đi qua tiêu điểm chính F'"],
-    ['keoF', 'Tia ló có đường kéo dài đi qua tiêu điểm chính F'],
+    ['keoF', "Tia ló có đường kéo dài đi qua tiêu điểm chính F'"],
+    ['keoF_old', 'Tia ló có đường kéo dài đi qua tiêu điểm chính F'],
     ['songsong', 'Tia ló song song với trục chính'],
     ['quaO', 'Tia ló đi qua quang tâm O'],
   ];
@@ -59,7 +60,7 @@
     Draw.background(v, p, 2);
     Draw.axis(v, p, false);
     Draw.lens(v, p, type, v.ymax * 0.85, { shape: false });
-    Draw.foci(v, p, F);
+    Draw.foci(v, p, F, type);
     Draw.arrowObj(v, p, -cfg.d, cfg.h, p.obj, { base: 'A', tip: 'B' });
 
     if (showAns) {
@@ -519,7 +520,7 @@
     const rows = [
       ['Tia sáng đi qua quang tâm O', gradeInfo.answers[0], gradeInfo.answers[1]],
       ['Tia sáng song song với trục chính', gradeInfo.answers[2], gradeInfo.answers[3]],
-      ["Tia sáng đi qua tiêu điểm chính (TKPK: hướng tới F')", gradeInfo.answers[4], gradeInfo.answers[5]],
+      ['Tia sáng đi qua tiêu điểm chính (TKPK: hướng tới F)', gradeInfo.answers[4], gradeInfo.answers[5]],
     ];
     const tx = 45, ty = 285, tw = W - 90, rh = 54;
     const cw = [360, (tw - 360) / 2, (tw - 360) / 2];

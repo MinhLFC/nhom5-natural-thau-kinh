@@ -222,7 +222,7 @@ def build_docx():
 
     add_h1("1. Thí nghiệm tìm hiểu đường truyền của các tia sáng đặc biệt qua thấu kính.")
     add_h2("1.1. Mục tiêu:")
-    add_bullet("Trình bày và mô tả được đường truyền của 3 tia sáng đặc biệt (tia tới đi qua quang tâm O, tia tới song song với trục chính, tia tới đi qua tiêu điểm chính F hoặc có đường kéo dài đi qua F') khi qua thấu kính hội tụ và thấu kính phân kì thông qua quan sát mô phỏng.")
+    add_bullet("Trình bày và mô tả được đường truyền của 3 tia sáng đặc biệt (tia tới đi qua quang tâm O, tia tới song song với trục chính cho tia ló đi qua F' hoặc có đường kéo dài qua F', tia tới đi qua F hoặc có đường kéo dài hướng tới F cho tia ló song song trục chính) khi qua thấu kính hội tụ và thấu kính phân kì thông qua quan sát mô phỏng.")
     add_bullet("Rút ra được quy luật hội tụ của chùm tia ló đối với thấu kính hội tụ và tính chất phân kì của chùm tia ló đối với thấu kính phân kì khi chùm tia tới song song với trục chính.")
 
     add_h2("1.2. Dụng cụ, thiết bị và các bước tiến hành.")
@@ -304,11 +304,11 @@ def build_docx():
     add_bullet("Tia tới đi qua quang tâm O: Tích chọn ô \"Tia đi qua quang tâm O\". Quan sát thấy tia ló tiếp tục truyền thẳng, tương tự như thấu kính hội tụ.", "1. ")
     add_pic("07_tn1_pk_ray_o.png", 5.4, "Hình 1.7: Tia tới đi qua quang tâm O của thấu kính phân kì truyền thẳng")
 
-    add_bullet("Tia tới song song với trục chính: Tích chọn ô \"Tia song song với trục chính\". Quan sát thấy tia ló bị loe rộng ra (phân kì), đường kéo dài của tia ló (nét đứt) đi qua tiêu điểm chính F ở phía trước thấu kính.", "2. ")
-    add_pic("08_tn1_pk_ray_p.png", 5.4, "Hình 1.8: Tia tới song song trục chính cho tia ló có đường kéo dài đi qua tiêu điểm F")
+    add_bullet("Tia tới song song với trục chính: Tích chọn ô \"Tia song song với trục chính\". Quan sát thấy tia ló bị loe rộng ra (phân kì), đường kéo dài của tia ló (nét đứt) đi qua tiêu điểm ảnh chính F' ở phía trước thấu kính.", "2. ")
+    add_pic("08_tn1_pk_ray_p.png", 5.4, "Hình 1.8: Tia tới song song trục chính cho tia ló có đường kéo dài đi qua tiêu điểm ảnh F'")
 
-    add_bullet("Tia tới có đường kéo dài hướng tới tiêu điểm chính F': Tích chọn ô \"Tia có đường kéo dài qua tiêu điểm F'\". Quan sát thấy tia ló sau khi qua thấu kính trở nên song song với trục chính.", "3. ")
-    add_pic("09_tn1_pk_ray_f.png", 5.4, "Hình 1.9: Tia tới hướng tới tiêu điểm F' ở sau thấu kính cho tia ló song song trục chính")
+    add_bullet("Tia tới có đường kéo dài hướng tới tiêu điểm vật chính F: Tích chọn ô \"Tia có đường kéo dài qua tiêu điểm F\". Quan sát thấy tia ló sau khi qua thấu kính trở nên song song với trục chính.", "3. ")
+    add_pic("09_tn1_pk_ray_f.png", 5.4, "Hình 1.9: Tia tới hướng tới tiêu điểm vật F ở sau thấu kính cho tia ló song song trục chính")
 
     add_bullet("Chiếu đồng thời cả 3 tia sáng đặc biệt qua thấu kính phân kì: Quan sát thấy chùm tia ló loe rộng ra, các đường kéo dài của chúng cắt nhau tại điểm ảnh ảo S' ở phía trước thấu kính.", "4. ")
     add_pic("10_tn1_pk_all_rays.png", 5.4, "Hình 1.10: Chùm tia ló phân kì có các đường kéo dài cắt nhau tại ảnh ảo S'")
@@ -959,7 +959,7 @@ def build_html_for_pdf():
   
   <h2>1.1. Mục tiêu:</h2>
   <ul>
-    <li>Trình bày và mô tả được đường truyền của 3 tia sáng đặc biệt (tia tới đi qua quang tâm O, tia tới song song với trục chính, tia tới đi qua tiêu điểm chính F hoặc có đường kéo dài đi qua F') khi qua thấu kính hội tụ và thấu kính phân kì thông qua quan sát mô phỏng.</li>
+    <li>Trình bày và mô tả được đường truyền của 3 tia sáng đặc biệt (tia tới đi qua quang tâm O, tia tới song song với trục chính cho tia ló đi qua F' hoặc có đường kéo dài qua F', tia tới đi qua F hoặc có đường kéo dài hướng tới F cho tia ló song song trục chính) khi qua thấu kính hội tụ và thấu kính phân kì thông qua quan sát mô phỏng.</li>
     <li>Rút ra được quy luật hội tụ của chùm tia ló đối với thấu kính hội tụ và tính chất phân kì của chùm tia ló đối với thấu kính phân kì khi chùm tia tới song song với trục chính.</li>
   </ul>
 
@@ -1065,19 +1065,19 @@ def build_html_for_pdf():
   </div>
 
   <ul>
-    <li><b>2. Tia tới song song với trục chính:</b> Tích chọn ô <i>"Tia song song với trục chính"</i>. Quan sát thấy tia ló bị loe rộng ra (phân kì), đường kéo dài của tia ló (nét đứt) đi qua tiêu điểm chính F ở phía trước thấu kính.</li>
+    <li><b>2. Tia tới song song với trục chính:</b> Tích chọn ô <i>"Tia song song với trục chính"</i>. Quan sát thấy tia ló bị loe rộng ra (phân kì), đường kéo dài của tia ló (nét đứt) đi qua tiêu điểm ảnh chính F' ở phía trước thấu kính.</li>
   </ul>
   <div class="img-wrap">
     <img src="doc_images/08_tn1_pk_ray_p.png" alt="Tia song song trục chính - TKPK">
-    <div class="caption">Hình 1.8: Tia tới song song trục chính cho tia ló có đường kéo dài đi qua tiêu điểm F</div>
+    <div class="caption">Hình 1.8: Tia tới song song trục chính cho tia ló có đường kéo dài đi qua tiêu điểm ảnh F'</div>
   </div>
 
   <ul>
-    <li><b>3. Tia tới có đường kéo dài hướng tới tiêu điểm chính F':</b> Tích chọn ô <i>"Tia có đường kéo dài qua tiêu điểm F'"</i>. Tia ló sau khi qua thấu kính trở nên song song với trục chính.</li>
+    <li><b>3. Tia tới có đường kéo dài hướng tới tiêu điểm vật chính F:</b> Tích chọn ô <i>"Tia có đường kéo dài qua tiêu điểm F"</i>. Tia ló sau khi qua thấu kính trở nên song song với trục chính.</li>
   </ul>
   <div class="img-wrap">
-    <img src="doc_images/09_tn1_pk_ray_f.png" alt="Tia hướng tới tiêu điểm F' - TKPK">
-    <div class="caption">Hình 1.9: Tia tới hướng tới tiêu điểm F' ở sau thấu kính cho tia ló song song trục chính</div>
+    <img src="doc_images/09_tn1_pk_ray_f.png" alt="Tia hướng tới tiêu điểm F - TKPK">
+    <div class="caption">Hình 1.9: Tia tới hướng tới tiêu điểm vật F ở sau thấu kính cho tia ló song song trục chính</div>
   </div>
 
   <ul>

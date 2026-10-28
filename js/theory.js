@@ -21,7 +21,9 @@
     c.fillStyle = p.focus;
     c.font = '700 12px "Be Vietnam Pro", sans-serif';
     c.textAlign = 'center';
-    [[-F, 'F'], [F, "F'"]].forEach(([x, l]) => {
+    const leftLabel = b.type === 'pk' ? "F'" : "F";
+    const rightLabel = b.type === 'pk' ? "F" : "F'";
+    [[-F, leftLabel], [F, rightLabel]].forEach(([x, l]) => {
       c.beginPath(); c.arc(v.X(x), v.Y(0), 3.5, 0, 7); c.fill();
       c.fillText(l, v.X(x), v.Y(0) + 16);
     });

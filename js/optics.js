@@ -144,13 +144,41 @@ const Draw = {
     c.restore();
   },
 
-  foci(v, p, f, show2f = false) {
+  foci(v, p, f, typeOrShow2f = 'ht', maybeShow2f = false) {
     const c = v.ctx;
     c.save();
     c.font = '700 14px "Be Vietnam Pro", sans-serif';
     c.textAlign = 'center';
-    const pts = [[-f, 'F'], [f, "F'"]];
-    if (show2f) pts.push([-2 * f, '2F'], [2 * f, "2F'"]);
+
+    let type = 'ht';
+    let show2f = false;
+    if (typeof typeOrShow2f === 'boolean') {
+      show2f = typeOrShow2f;
+      type = typeof maybeShow2f === 'string' ? maybeShow2f : 'ht';
+    } else if (typeof typeOrShow2f === 'string') {
+      type = typeOrShow2f;
+      show2f = Boolean(maybeShow2f);
+    } else if (typeOrShow2f && typeof typeOrShow2f === 'object') {
+      type = typeOrShow2f.type || 'ht';
+      show2f = Boolean(typeOrShow2f.show2f);
+    }
+
+    // ĐỐI VỚI THẤU KÍNH HỘI TỤ (TKHT):
+    // Tiêu điểm vật chính F ở phía trước (bên trái, x = -f)
+    // Tiêu điểm ảnh chính F' ở phía sau (bên phải, x = +f)
+    //
+    // ĐỐI VỚI THẤU KÍNH PHÂN KÌ (TKPK):
+    // Tiêu điểm ảnh chính F' ở phía trước (bên trái, x = -f)
+    // Tiêu điểm vật chính F ở phía sau (bên phải, x = +f)
+    const isPK = type === 'pk';
+    const leftLabel = isPK ? "F'" : "F";
+    const rightLabel = isPK ? "F" : "F'";
+    const pts = [[-f, leftLabel], [f, rightLabel]];
+    if (show2f) {
+      const left2Label = isPK ? "2F'" : "2F";
+      const right2Label = isPK ? "2F" : "2F'";
+      pts.push([-2 * f, left2Label], [2 * f, right2Label]);
+    }
     pts.forEach(([x, lb]) => {
       const big = !lb.startsWith('2');
       c.fillStyle = big ? p.focus : p.axis;

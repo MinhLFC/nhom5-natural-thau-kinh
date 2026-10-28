@@ -24,8 +24,8 @@
     },
     pk: {
       o: 'Tia tới đi qua quang tâm O thì tia ló tiếp tục <b>truyền thẳng</b> (không đổi hướng).',
-      p: 'Tia tới song song với trục chính thì tia ló có <b>đường kéo dài đi qua tiêu điểm chính F</b>.',
-      f: "Tia tới có đường kéo dài đi qua tiêu điểm chính F' thì tia ló <b>song song với trục chính</b>.",
+      p: "Tia tới song song với trục chính thì tia ló có <b>đường kéo dài đi qua tiêu điểm ảnh chính F'</b>.",
+      f: 'Tia tới có đường kéo dài đi qua tiêu điểm vật chính F thì tia ló <b>song song với trục chính</b>.',
     },
   };
   const NAMES = { o: 'Tia qua quang tâm', p: 'Tia song song trục chính', f: 'Tia qua tiêu điểm' };
@@ -57,7 +57,7 @@
     Draw.background(view, p, 5);
     Draw.axis(view, p);
     Draw.lens(view, p, st.type, view.ymax * 0.82);
-    Draw.foci(view, p, st.f);
+    Draw.foci(view, p, st.f, st.type);
 
     const colors = { o: p.rayO, p: p.rayP, f: p.rayF };
     let warn = '';
@@ -124,7 +124,7 @@
     b.classList.add('active');
     st.type = b.dataset.val;
     document.getElementById('r-ray-f-label').textContent = st.type === 'ht'
-      ? 'Tia đi qua tiêu điểm chính F' : "Tia có đường kéo dài qua tiêu điểm F'";
+      ? 'Tia đi qua tiêu điểm chính F' : 'Tia có đường kéo dài qua tiêu điểm F';
     updateConclusion();
     play();
   }));

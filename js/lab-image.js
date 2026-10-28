@@ -24,7 +24,7 @@
     Draw.background(view, p, 5);
     Draw.axis(view, p);
     Draw.lens(view, p, st.type, view.ymax * 0.85);
-    Draw.foci(view, p, st.f, st.type === 'ht');
+    Draw.foci(view, p, st.f, st.type, st.type === 'ht');
 
     const xB = -st.d, yB = st.h, xr = view.xmax + 5;
     const colors = { o: p.rayO, p: p.rayP, f: p.rayF };

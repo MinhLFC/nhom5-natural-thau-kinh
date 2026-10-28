@@ -1,13 +1,25 @@
 import os
 import sys
 import time
+import http.server
+import socketserver
+import threading
+from functools import partial
 from selenium import webdriver
 from selenium.webdriver.edge.options import Options
 from selenium.webdriver.common.by import By
 
 def main():
-    img_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'doc_images')
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    img_dir = os.path.join(base_dir, 'doc_images')
     os.makedirs(img_dir, exist_ok=True)
+
+    # Start local HTTP server to capture exact local code changes
+    port = 8765
+    handler = partial(http.server.SimpleHTTPRequestHandler, directory=base_dir)
+    httpd = socketserver.TCPServer(('127.0.0.1', port), handler)
+    server_thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    server_thread.start()
 
     opt = Options()
     opt.add_argument('--headless=new')
@@ -16,8 +28,7 @@ def main():
 
     driver = webdriver.Edge(options=opt)
     try:
-        # Load the deployed or local page
-        target_url = 'https://minhlfc.github.io/nhom5-natural-thau-kinh/'
+        target_url = f'http://127.0.0.1:{port}/index.html'
         driver.get(target_url)
         time.sleep(2)
 
@@ -216,6 +227,10 @@ def main():
 
     finally:
         driver.quit()
+        try:
+            httpd.shutdown()
+        except Exception:
+            pass
 
 if __name__ == '__main__':
     main()
